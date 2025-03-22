@@ -3,12 +3,13 @@ import { useEffect, useState } from "react";
 import config from "../../common/config";
 import { useNavigate } from "react-router-dom";
 import ImageUploader from "../../common/ImageUpload";
+import { FaAngleDown } from "react-icons/fa6";
 
 export default function PropertyForm() {
   const [formData, setFormData] = useState({
     title: "",
-    seo_title: "Luxury Villa for Sale",
-    seo_description: "Beautiful villa with sea view",
+    seo_title: "",
+    seo_description: "",
     description: "",
     refernce_number: "",
     permit_number: "",
@@ -160,7 +161,7 @@ export default function PropertyForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-4 p-6  text-black rounded-xl"
+      className="space-y-4 p-3  text-black rounded-xl"
     >
       <div className="flex flex-col">
         <label
@@ -259,14 +260,14 @@ export default function PropertyForm() {
       </div>
 
       <div>
-        <label className="text-gray-700 text-sm block font-medium">
+        <label className="text-gray-700  text-sm block font-medium mb-1.5">
           Property Type
         </label>
         <select
           name="property_type"
           value={formData.property_type}
           onChange={handleChange}
-          className="border p-2 rounded-lg w-full"
+          className="border p-2 border-gray-300 py-[9px] rounded-lg w-full"
         >
           <option value="" disabled>
             Select Property Type
@@ -280,14 +281,14 @@ export default function PropertyForm() {
       </div>
 
       <div>
-        <label className="text-gray-700 text-sm block font-medium">
+        <label className="text-gray-700  text-sm block font-medium mb-1.5">
           Property Status
         </label>
         <select
           name="property_status"
           value={formData.property_status}
           onChange={handleChange}
-          className="border p-2 rounded-lg w-full"
+          className="border border-gray-300 py-[9px] p-2 rounded-lg w-full"
         >
           <option value="" disabled>
             Select Property Status
@@ -301,25 +302,28 @@ export default function PropertyForm() {
       </div>
 
       <div className="relative">
-        <label className="text-gray-700 text-sm block font-medium">
+        <label className="text-gray-700 text-sm block font-medium mb-1.5">
           Consultant
         </label>
         <div
-          className="flex bg-white border p-2 rounded-lg w-full cursor-pointer items-center"
+          className="flex bg-white border border-gray-300 p-2 rounded-lg w-full cursor-pointer items-center"
           onClick={() => setShowDropdown(!showDropdown)}
         >
           {selectedConsultant ? (
-            <div className="flex items-center space-x-2">
-              <img
-                src={
-                  selectedConsultant.profile_pic
-                    ? `${selectedConsultant.profile_pic}`
-                    : "/default-profile.png"
-                }
-                alt={selectedConsultant.name}
-                className="h-8 rounded-full w-8 object-cover"
-              />
-              <span>{selectedConsultant.name}</span>
+            <div className="flex items-center justify-between w-full space-x-2">
+              <div className="flex items-center gap-4">
+                <img
+                  src={
+                    selectedConsultant.profile_pic
+                      ? `${selectedConsultant.profile_pic}`
+                      : "/default-profile.png"
+                  }
+                  alt={selectedConsultant.name}
+                  className="h-6 rounded-full  w-6 object-cover"
+                />
+                <span>{selectedConsultant.name}</span>
+              </div>
+              <FaAngleDown color="gray" />
             </div>
           ) : (
             <span className="text-gray-400">Select a Consultant</span>
@@ -327,11 +331,11 @@ export default function PropertyForm() {
         </div>
 
         {showDropdown && (
-          <div className="bg-white border rounded-lg shadow-lg w-full absolute mt-1 z-10">
+          <div className="bg-white border  border-gray-500/55 rounded-lg shadow-lg w-full absolute mt-1 z-10">
             {consultants.map((consultant) => (
               <div
                 key={consultant._id}
-                className="flex p-2 cursor-pointer hover:bg-gray-100 items-center"
+                className="flex p-2 cursor-pointer hover:bg-gray-100 rounded-lg  items-center"
                 onClick={() => handleSelect(consultant)}
               >
                 <img
@@ -585,7 +589,7 @@ export default function PropertyForm() {
       {/* Checkboxes */}
 
       <div className="flex gap-5">
-        <div className="flex items-center space-x-2 bg-white p-2 rounded-md border border-gray-300 shadow-sm">
+        {/* <div className="flex items-center space-x-2 bg-white p-2 rounded-md border border-gray-300 shadow-sm">
           <div className="relative">
             <input
               type="checkbox"
@@ -597,7 +601,7 @@ export default function PropertyForm() {
               }
               className="peer hidden"
             />
-            <div className="w-5 h-5 flex items-center justify-center border-2 border-gray-400 rounded-md peer-checked:bg-blue-500 peer-checked:border-blue-500 transition">
+            <div className="w-5 h-5 flex items-center justify-center border-2 border-gray-400 rounded-md peer-checked:bg-[#2f5fa7] peer-checked:border-[#2f5fa7] transition">
               {formData.comerical && (
                 <svg
                   className="w-4 h-4 text-white"
@@ -622,9 +626,9 @@ export default function PropertyForm() {
           >
             Comercial
           </label>
-        </div>
+        </div> */}
 
-        <div className="flex items-center space-x-2 bg-white p-2 rounded-md border border-gray-300 shadow-sm">
+        {/* <div className="flex items-center space-x-2 bg-white p-2 rounded-md border border-gray-300 shadow-sm">
           <div className="relative">
             <input
               type="checkbox"
@@ -636,7 +640,7 @@ export default function PropertyForm() {
               }
               className="peer hidden"
             />
-            <div className="w-5 h-5 flex items-center justify-center border-2 border-gray-400 rounded-md peer-checked:bg-blue-500 peer-checked:border-blue-500 transition">
+            <div className="w-5 h-5 flex items-center justify-center border-2 border-gray-400 rounded-md peer-checked:bg-[#2f5fa7] peer-checked:border-[#2f5fa7] transition">
               {formData.off_plan && (
                 <svg
                   className="w-4 h-4 text-white"
@@ -655,6 +659,43 @@ export default function PropertyForm() {
               )}
             </div>
           </div>
+
+          <label
+            htmlFor="off_plan"
+            className="text-sm text-black cursor-pointer"
+          >
+            Off Plan
+          </label>
+        </div> */}
+        <div className="flex items-center space-x-2 bg-white p-2 rounded-md border border-gray-300 shadow-sm">
+          <input
+            type="checkbox"
+            id="comerical"
+            name="comerical"
+            checked={formData.comerical}
+            onChange={(e) =>
+              setFormData({ ...formData, comerical: e.target.checked })
+            }
+            className="w-4 h-4"
+          />
+          <label
+            htmlFor="comerical"
+            className="text-sm text-black cursor-pointer"
+          >
+            Comercial
+          </label>
+        </div>
+        <div className="flex items-center space-x-2 bg-white p-2 rounded-md border border-gray-300 shadow-sm">
+          <input
+            type="checkbox"
+            id="off_plan"
+            name="off_plan"
+            checked={formData.off_plan}
+            onChange={(e) =>
+              setFormData({ ...formData, off_plan: e.target.checked })
+            }
+            className="w-4 h-4 "
+          />
           <label
             htmlFor="off_plan"
             className="text-sm text-black cursor-pointer"
@@ -664,7 +705,9 @@ export default function PropertyForm() {
         </div>
       </div>
 
-      <button type="submit">Submit</button>
+      <button className="text-white bg-[#2f5fa7]" type="submit">
+        Add Property
+      </button>
     </form>
   );
 }

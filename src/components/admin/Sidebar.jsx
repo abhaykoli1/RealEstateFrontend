@@ -136,7 +136,7 @@ const Sidebar = ({ setSidebar, sidebar }) => {
               Admin
             </h2>
           </div> */}
-          <div className="flex bg-white border-b justify-center w-60 fixed items-center leading-3 line-clamp-1 py-2 top-0 z-30">
+          <div className="flex bg-white border-b border-gray-300  justify-center w-60 fixed items-center leading-3 line-clamp-1 py-[7px] top-0 z-30">
             {/* DNS */}
             {sidebar ? (
               <div

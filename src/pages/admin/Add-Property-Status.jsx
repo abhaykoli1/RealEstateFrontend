@@ -41,7 +41,7 @@ const AddPropertyStatus = () => {
 
   return (
     <div className=" mx-auto  p-3 rounded-lg w-full">
-      <h2 className="text-xl font-bold mb-4">Add Property Status</h2>
+      {/* <h2 className="text-xl font-bold mb-4">Add Property Status</h2> */}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium">Title</label>
@@ -73,11 +73,7 @@ const AddPropertyStatus = () => {
           />
         </div> */}
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 disabled:bg-gray-400"
-        >
+        <button type="submit" disabled={loading} className=" ">
           {loading ? "Adding..." : "Add Property Status"}
         </button>
       </form>

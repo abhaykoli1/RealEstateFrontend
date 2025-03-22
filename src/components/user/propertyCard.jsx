@@ -10,6 +10,7 @@ import CardImg from "../../assets/cardimage.png";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import config from "../../common/config";
+import { useNavigate, useParams } from "react-router";
 // import { useEffect, useState } from "react";
 // import config from "../../common/config";
 // import axios from "axios";
@@ -39,6 +40,7 @@ const PropertyCard = ({
 }) => {
   const [status, setStatus] = useState(null);
   const [pType, setPType] = useState(null);
+  // const { seo_title } = useParams();
 
   useEffect(() => {
     const fetchPropertyStatus = async () => {
@@ -74,6 +76,11 @@ const PropertyCard = ({
     }
   }, [property_type]);
 
+  const navigate = useNavigate();
+
+  const handelPerticularProperty = (seoTitle) => {
+    navigate(`/property/${seoTitle}`);
+  };
   console.log("image : ", image[0]);
   return (
     <div className="w-[95%] ml-2 bg-white shadow-lg  rounded-md overflow-hidden ">
@@ -134,7 +141,10 @@ const PropertyCard = ({
               <FaEnvelope className="text-gray-600" />
             </div>
           </div>
-          <div className="PropertyButton !bg-[#2F5FA7] text-white px-4 !py-1.5 rounded-lg">
+          <div
+            onClick={() => handelPerticularProperty(seo_title)}
+            className="PropertyButton !bg-[#2F5FA7] text-white px-4 !py-1.5 rounded-lg"
+          >
             Set a viewing
           </div>
         </div>

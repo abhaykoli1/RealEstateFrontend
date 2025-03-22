@@ -311,13 +311,13 @@ const PropertyPerticular = () => {
                 Other properties that may interest you
               </h2>
               <div className="max-w-screen-xl mx-auto pb-7 px-0">
-                <Slider {...settings}>
+                {/* <Slider {...settings}>
                   {properties.map((pro) => (
                     <div key={pro.id} className="slick-slide  my-5">
                       <PropertyCard {...pro} />{" "}
                     </div>
                   ))}
-                </Slider>
+                </Slider> */}
               </div>
             </div>
           </div>

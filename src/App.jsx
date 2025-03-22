@@ -1,6 +1,3 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import { Route, Routes } from "react-router";
 import ListingProperties from "./pages/user/ListingPage";
 import UserLayout from "./components/user/Layout";
@@ -24,12 +21,14 @@ import EditPropertyType from "./pages/admin/EditPropertyType";
 import AddProperty from "./pages/admin/Add-Property";
 import AddPropertyStatus from "./pages/admin/Add-Property-Status";
 import AddConsultant from "./pages/admin/addConsultant";
-import AddPropertyNew from "./pages/admin/addPropertynew";
+import AdminLogin from "./pages/auth/AdminLogin";
+import CheckAuth from "./components/auth/check-auth";
 
 function App() {
   return (
     <div className="flex flex-col overflow-hidden">
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<UserLayout />}>
           <Route path="" element={<LandingPage />} />
           <Route path="listing" element={<ListingProperties />} />
@@ -40,17 +39,22 @@ function App() {
           <Route path="communities" element={<Comunities />} />
           <Route path="communitie" element={<PerticularCommunities />} />
         </Route>
-        <Route path="/admin" element={<AdminLayout />}>
+
+        {/* Protected Admin Routes */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route
+          path="/admin/*"
+          element={
+            <CheckAuth>
+              <AdminLayout />
+            </CheckAuth>
+          }
+        >
           <Route path="interests" element={<Interests />} />
-
           <Route path="add-property-status" element={<AddPropertyStatus />} />
-
           <Route path="add-property-type" element={<AddPropertyType />} />
           <Route path="all-property-types" element={<AllPropertyTypes />} />
           <Route path="edit-property-type/:id" element={<EditPropertyType />} />
-          <Route path="add" element={<AddPropertyNew />} />
-
-          {/* <Route path="Property-Type" element={<PropertyType />} /> */}
           <Route path="blog-category" element={<BlogCategory />} />
           <Route path="add-blog" element={<AddBlog />} />
           <Route path="about-us" element={<AboutUs />} />

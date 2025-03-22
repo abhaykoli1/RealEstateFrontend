@@ -69,7 +69,7 @@ const AddConsultant = () => {
 
   return (
     <div className="mx-auto p-3 rounded-lg w-full">
-      <h2 className="text-xl font-bold mb-4">Add Consultant</h2>
+      {/* <h2 className="text-xl font-bold mb-4">Add Consultant</h2> */}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium">Name:</label>
@@ -158,7 +158,7 @@ const AddConsultant = () => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 disabled:bg-gray-400"
+          className=" text-white py-2 rounded-md hover:bg-blue-700 disabled:bg-gray-400"
         >
           {loading ? "Adding..." : "Add Consultant"}
         </button>

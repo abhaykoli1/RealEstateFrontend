@@ -64,8 +64,8 @@ const PerticularBlog = () => {
     speed: 500,
     slidesToShow: 2, // Show 2 cards at a time
     slidesToScroll: 1,
-    dots: true, 
-    autoplay: true, 
+    dots: true,
+    autoplay: true,
     autoplaySpeed: 3000,
     responsive: [
       {
@@ -78,14 +78,14 @@ const PerticularBlog = () => {
       {
         breakpoint: 768,
         settings: {
-          slidesToShow: 2, 
+          slidesToShow: 2,
           slidesToScroll: 1,
         },
       },
       {
         breakpoint: 480,
         settings: {
-          slidesToShow: 1, 
+          slidesToShow: 1,
           slidesToScroll: 1,
         },
       },

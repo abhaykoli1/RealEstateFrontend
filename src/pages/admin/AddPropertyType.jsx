@@ -36,8 +36,8 @@ function AddPropertyType() {
   }, []);
 
   return (
-    <div className="p-6 w-full mx-auto">
-      <h2 className="text-xl font-semibold mb-4">Add Property Type</h2>
+    <div className="p-3 w-full mx-auto">
+      {/* <h2 className="text-xl font-semibold mb-4">Add Property Type</h2> */}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="text-gray-700 text-sm block font-medium">
@@ -73,10 +73,7 @@ function AddPropertyType() {
             className="border border-gray-300 rounded-md w-full px-4 py-2"
           />
         </div> */}
-        <button
-          type="submit"
-          className="bg-blue-500 rounded-md text-white w-full px-4 py-2 hover:bg-blue-600"
-        >
+        <button type="submit" className="">
           Add Property Type
         </button>
       </form>

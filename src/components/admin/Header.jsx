@@ -1,6 +1,6 @@
 import { Menu, Plus } from "lucide-react";
 import React, { useContext, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const AdminHeader = ({ setSidebar }) => {
   const location = useLocation();
@@ -8,6 +8,7 @@ const AdminHeader = ({ setSidebar }) => {
   const routeMap = {
     "/admin": "Admin Dashboard",
     "/admin/add-property-type": "Add Property Type",
+    "/admin/add-property": "Add Property",
     "/admin/add-property-status": "Add Property Status",
     "/admin/add-consultant": "Consultant",
     "/admin/users": "Users List",
@@ -17,6 +18,12 @@ const AdminHeader = ({ setSidebar }) => {
   };
 
   const routeName = routeMap[location.pathname] || "Unknown Route";
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("isAuthenticated"); // Remove authentication
+    navigate("/admin/login"); // Redirect to login page
+  };
 
   return (
     <header
@@ -38,6 +45,12 @@ const AdminHeader = ({ setSidebar }) => {
       </div>
       <div className="flex gap-3 items-center">
         <button
+          onClick={handleLogout}
+          className="  px-4 py-2 !rounded-[5px] hover:scale-[102%] transition"
+        >
+          Logout
+        </button>
+        {/* <button
           className={`bg-slate-800 text-white  lg:h-full lg:w-20 md:w-20 sm:w-20 w-10 flex items-center justify-center  h-8  ${
             routeName === "Admin Rides" || routeName === "Add Reviews"
               ? "flex"
@@ -51,7 +64,7 @@ const AdminHeader = ({ setSidebar }) => {
         >
           <Plus size={18} />
           <span className="hidden lg:flex md:flex sm:flex">New</span>
-        </button>
+        </button> */}
         {/* <Avtar hi={false} AvtarClass={"w-48 lg:mt-20 mt-[68px] -mr-11"} /> */}
       </div>
     </header>
