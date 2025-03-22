@@ -1,0 +1,357 @@
+import { useState } from "react";
+
+const consultants = [
+  { id: 1, name: "John Doe", image: "https://via.placeholder.com/40" },
+  { id: 2, name: "Jane Smith", image: "https://via.placeholder.com/40" },
+  { id: 3, name: "Michael Johnson", image: "https://via.placeholder.com/40" },
+];
+export default function PropertyFormComponent() {
+  const [formData, setFormData] = useState({
+    title: "",
+    seo_title: "",
+    seo_description: "",
+    description: "",
+    refernce_number: "",
+    permit_number: "",
+    property_type: "",
+    property_status: "",
+    price: "",
+    features: [],
+    amenities: [],
+    neary_by: [],
+    latitude: "",
+    longitude: "",
+    old_permit_no: "",
+    image: [],
+    old_permit_dec: "",
+    consultant: "",
+    comercial: false,
+    location: "",
+    off_plan: false,
+  });
+
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  const handleSelect = (consultant) => {
+    setFormData({ ...formData, consultant: consultant.name });
+    setShowDropdown(false);
+  };
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleFeaturesChange = (index, value) => {
+    const newFeatures = [...formData.features];
+    newFeatures[index] = value;
+    setFormData((prev) => ({ ...prev, features: newFeatures }));
+  };
+
+  const handleArrayChange = (field, index, value) => {
+    const newArray = [...formData[field]];
+    newArray[index] = value;
+    setFormData((prev) => ({ ...prev, [field]: newArray }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Form Data Submitted:", formData);
+  };
+
+  return (
+    <div className="p-6 w-full">
+      <h1 className="text-2xl font-bold mb-6">Property Form</h1>
+      <form className="space-y-4" onSubmit={handleSubmit}>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="text-gray-700 text-sm block font-medium">
+              Title
+            </label>
+            <input
+              type="text"
+              name="title"
+              placeholder="Title"
+              value={formData.title}
+              onChange={handleChange}
+              className="border p-2 rounded-lg w-full"
+            />
+          </div>
+          <div>
+            <label className="text-gray-700 text-sm block font-medium">
+              SEO Title
+            </label>
+            <input
+              type="text"
+              name="seo_title"
+              placeholder="SEO Title"
+              value={formData.seo_title}
+              onChange={handleChange}
+              className="border p-2 rounded-lg w-full"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="text-gray-700 text-sm block font-medium">
+            SEO Description
+          </label>
+          <textarea
+            name="seo_description"
+            placeholder="SEO Description"
+            value={formData.seo_description}
+            onChange={handleChange}
+            className="border p-2 rounded-lg w-full"
+          />
+        </div>
+
+        <div>
+          <label className="text-gray-700 text-sm block font-medium">
+            Description
+          </label>
+          <textarea
+            name="description"
+            placeholder="Description"
+            value={formData.description}
+            onChange={handleChange}
+            className="border p-2 rounded-lg w-full"
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="text-gray-700 text-sm block font-medium">
+              Reference Number
+            </label>
+            <input
+              type="text"
+              name="refernce_number"
+              placeholder="Reference Number"
+              value={formData.refernce_number}
+              onChange={handleChange}
+              className="border p-2 rounded-lg w-full"
+            />
+          </div>
+          <div>
+            <label className="text-gray-700 text-sm block font-medium">
+              Permit Number
+            </label>
+            <input
+              type="text"
+              name="permit_number"
+              placeholder="Permit Number"
+              value={formData.permit_number}
+              onChange={handleChange}
+              className="border p-2 rounded-lg w-full"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="text-gray-700 text-sm block font-medium">
+            Property Type
+          </label>
+          <select
+            name="property_type"
+            value={formData.property_type}
+            onChange={handleChange}
+            className="border p-2 rounded-lg w-full"
+          >
+            <option value="" disabled>
+              Select Property Type
+            </option>
+            <option value="apartment">Apartment</option>
+            <option value="house">House</option>
+            <option value="villa">Villa</option>
+            <option value="commercial">Commercial</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="text-gray-700 text-sm block font-medium">
+            Property Status
+          </label>
+          <select
+            name="property_status"
+            value={formData.property_status}
+            onChange={handleChange}
+            className="border p-2 rounded-lg w-full"
+          >
+            <option value="" disabled>
+              Select Property Status
+            </option>
+            <option value="available">Available</option>
+            <option value="sold">Sold</option>
+            <option value="rented">Rented</option>
+            <option value="under_construction">Under Construction</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="text-gray-700 text-sm block font-medium">
+            Price
+          </label>
+          <input
+            type="text"
+            name="price"
+            placeholder="Price"
+            value={formData.price}
+            onChange={handleChange}
+            className="border p-2 rounded-lg w-full"
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="text-gray-700 text-sm block font-medium">
+              Latitude
+            </label>
+            <input
+              type="number"
+              name="latitude"
+              placeholder="Latitude"
+              value={formData.latitude}
+              onChange={handleChange}
+              className="border p-2 rounded-lg w-full"
+            />
+          </div>
+          <div>
+            <label className="text-gray-700 text-sm block font-medium">
+              Longitude
+            </label>
+            <input
+              type="number"
+              name="longitude"
+              placeholder="Longitude"
+              value={formData.longitude}
+              onChange={handleChange}
+              className="border p-2 rounded-lg w-full"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="text-gray-700 text-sm block font-medium">
+            Old Permit No
+          </label>
+          <input
+            type="number"
+            name="old_permit_no"
+            placeholder="Old Permit No"
+            value={formData.old_permit_no}
+            onChange={handleChange}
+            className="border p-2 rounded-lg w-full"
+          />
+        </div>
+
+        <div>
+          <label className="text-gray-700 text-sm block font-medium">
+            Old Permit Description
+          </label>
+          <textarea
+            name="old_permit_dec"
+            placeholder="Old Permit Description"
+            value={formData.old_permit_dec}
+            onChange={handleChange}
+            className="border p-2 rounded-lg w-full"
+          />
+        </div>
+
+        <div className="relative">
+          <label className="text-gray-700 text-sm block font-medium">
+            Consultant
+          </label>
+          <div
+            className="flex bg-white border p-2 rounded-lg w-full cursor-pointer items-center"
+            onClick={() => setShowDropdown(!showDropdown)}
+          >
+            {formData.consultant ? (
+              <div className="flex items-center space-x-2">
+                <img
+                  src={
+                    consultants.find((c) => c.name === formData.consultant)
+                      ?.image
+                  }
+                  alt={formData.consultant}
+                  className="h-8 rounded-full w-8"
+                />
+                <span>{formData.consultant}</span>
+              </div>
+            ) : (
+              <span className="text-gray-400">Select a Consultant</span>
+            )}
+          </div>
+
+          {showDropdown && (
+            <div className="bg-white border rounded-lg shadow-lg w-full absolute mt-1 z-10">
+              {consultants.map((consultant) => (
+                <div
+                  key={consultant.id}
+                  className="flex p-2 cursor-pointer hover:bg-gray-100 items-center"
+                  onClick={() => handleSelect(consultant)}
+                >
+                  <img
+                    src={consultant.image}
+                    alt={consultant.name}
+                    className="h-8 rounded-full w-8"
+                  />
+                  <span className="ml-2">{consultant.name}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <label className="text-gray-700 text-sm block font-medium">
+            Commercial
+          </label>
+          <input
+            type="checkbox"
+            name="comercial"
+            checked={formData.comercial}
+            onChange={handleChange}
+            className="h-5 w-5"
+          />
+        </div>
+
+        <div>
+          <label className="text-gray-700 text-sm block font-medium">
+            Location
+          </label>
+          <input
+            type="text"
+            name="location"
+            placeholder="Location"
+            value={formData.location}
+            onChange={handleChange}
+            className="border p-2 rounded-lg w-full"
+          />
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <label className="text-gray-700 text-sm block font-medium">
+            Off Plan
+          </label>
+          <input
+            type="checkbox"
+            name="off_plan"
+            checked={formData.off_plan}
+            onChange={handleChange}
+            className="h-5 w-5"
+          />
+        </div>
+
+        <button
+          type="submit"
+          className="bg-blue-500 p-2 rounded-lg text-white w-full hover:bg-blue-600 transition-all"
+        >
+          Submit
+        </button>
+      </form>
+    </div>
+  );
+}
