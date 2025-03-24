@@ -1,15 +1,20 @@
+import axios from "axios";
 import React, { useState } from "react";
+import config from "../../common/config";
+import ImageUploader from "../../common/ImageUpload";
 
 function WhyChooseUs() {
   const [formData, setFormData] = useState({
-    Description: "",
+    description: "",
     small_features: [],
   });
 
-  const handleDescriptionChange = (e) => {
+  console.log(formData);
+
+  const handledChange = (e) => {
     setFormData({
       ...formData,
-      Description: e.target.value,
+      description: e.target.value,
     });
   };
 
@@ -40,99 +45,88 @@ function WhyChooseUs() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const { Description, small_features } = formData;
-
-    // Example of sending the form data to the server (adjust the URL to your backend)
-    fetch("/submit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ Description, small_features }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Success:", data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
+    try {
+      await axios.post(`${config.API_URL}/api/why-chose`, formData);
+      alert("Content Added Successfully");
+      setFormData({
+        description: "",
+        small_features: [],
       });
+    } catch (error) {
+      console.error("Error:", error);
+      alert(error.response?.data?.message || "An error occurred");
+    }
+  };
+
+  const handleUploadImage = (index, uploadedFile) => {
+    if (uploadedFile.length > 0) {
+      const newFeatures = [...formData.small_features];
+      newFeatures[index].image = uploadedFile[0]; // Assuming ImageUploader provides a full URL
+      setFormData({ ...formData, small_features: newFeatures });
+    }
   };
 
   return (
-    <div className="p-6 w-full mx-auto">
-      <h1 className="text-center !text-3xl font-bold mb-4">Why Choose Us</h1>
+    <div className="p-3 w-full mx-auto">
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Description Field */}
         <div>
-          <label
-            htmlFor="Description"
-            className="text-gray-700 text-sm block font-medium"
-          >
+          <label className="text-gray-700 text-sm block font-medium">
             Description:
           </label>
           <textarea
-            id="Description"
-            value={formData.Description}
-            onChange={handleDescriptionChange}
+            value={formData.description}
+            onChange={handledChange}
             required
-            className="border border-gray-300 rounded-md shadow-sm w-full block focus:outline-none focus:ring-2 focus:ring-blue-500 mt-1 px-4 py-2"
+            className="border border-gray-300 rounded-md  w-full block focus:outline-none focus:ring-2 focus:ring-blue-500 mt-1 px-4 py-2"
           />
         </div>
 
-        {/* Small Features Field */}
         <div>
           <label className="text-gray-700 text-sm block font-medium">
             Small Features:
           </label>
           {formData.small_features.map((feature, index) => (
             <div key={index} className="mt-4 space-y-2">
-              {/* Image Field */}
               <div>
-                <label
-                  htmlFor={`image-${index}`}
-                  className="text-gray-700 text-sm block font-medium"
-                >
+                <label className="text-gray-700 text-sm block font-medium">
                   Image {index + 1}:
                 </label>
-                <input
-                  type="file"
-                  id={`image-${index}`}
-                  onChange={(e) =>
-                    handleFeatureChange(
-                      index,
-                      "image",
-                      URL.createObjectURL(e.target.files[0])
-                    )
+                <ImageUploader
+                  onUpload={(uploadedFile) =>
+                    handleUploadImage(index, uploadedFile)
                   }
-                  className="text-gray-500 text-sm w-full block file:bg-blue-50 file:border file:font-semibold file:px-4 file:py-2 file:rounded-md file:text-blue-700 file:text-sm mt-1"
                 />
               </div>
 
-              {/* Description Field for Small Feature */}
-              <div>
-                <label
-                  htmlFor={`description-${index}`}
-                  className="text-gray-700 text-sm block font-medium"
-                >
-                  Description {index + 1}:
-                </label>
-                <input
-                  type="text"
-                  id={`description-${index}`}
-                  value={feature.description}
-                  onChange={(e) =>
-                    handleFeatureChange(index, "description", e.target.value)
-                  }
-                  required
-                  className="border border-gray-300 rounded-md shadow-sm w-full block focus:outline-none focus:ring-2 focus:ring-blue-500 mt-1 px-4 py-2"
-                />
+              <div className="flex items-end gap-5 ">
+                {feature.image && (
+                  <div className="mt-4">
+                    <img
+                      src={feature.image}
+                      alt="Uploaded"
+                      className="w-24 h-24 rounded-md object-cover"
+                    />
+                  </div>
+                )}
+                <div className="w-full">
+                  {" "}
+                  <label className="text-gray-700 text-sm block font-medium">
+                    Description {index + 1}:
+                  </label>
+                  <textarea
+                    type="text"
+                    value={feature.description}
+                    onChange={(e) =>
+                      handleFeatureChange(index, "description", e.target.value)
+                    }
+                    required
+                    className="border border-gray-300 rounded-md  w-full block focus:outline-none focus:ring-2 focus:ring-blue-500 mt-1 px-4 py-2"
+                  />
+                </div>
               </div>
 
-              {/* Remove Button */}
               <button
                 type="button"
                 onClick={() => handleRemoveFeature(index)}
@@ -143,20 +137,18 @@ function WhyChooseUs() {
             </div>
           ))}
 
-          {/* Add New Feature Button */}
           <button
             type="button"
             onClick={handleAddFeature}
-            className="bg-green-500 rounded-md shadow-sm text-white w-full focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 font-semibold hover:bg-green-600 px-4 py-2"
+            className=" mt-5 rounded-md  text-white w-full  px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             Add New Feature
           </button>
         </div>
 
-        {/* Submit Button */}
         <button
           type="submit"
-          className="bg-blue-500 rounded-md shadow-sm text-white w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-semibold hover:bg-blue-600 px-4 py-2"
+          className="bg-blue-500 rounded-md  text-white w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-semibold hover:bg-blue-600 px-4 py-2"
         >
           Submit
         </button>

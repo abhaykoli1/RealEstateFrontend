@@ -79,7 +79,7 @@ const AddConsultant = () => {
             value={formData.name}
             onChange={handleChange}
             required
-            className="w-full mt-1 p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+            className="w-full mt-1 border !border-gray-300 rounded-md  px-4 py-2"
           />
         </div>
         <div>
@@ -90,7 +90,7 @@ const AddConsultant = () => {
             onChange={handleChange}
             required
             rows="4"
-            className="w-full mt-1 p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+            className="w-full mt-1 p-2 border border-gray-300 rounded-md  px-4 py-2"
           ></textarea>
         </div>
         <div>
@@ -101,7 +101,7 @@ const AddConsultant = () => {
             value={formData.email}
             onChange={handleChange}
             required
-            className="w-full mt-1 p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+            className="w-full mt-1 p-2 border border-gray-300 rounded-md  px-4 py-2"
           />
         </div>
         <div className="flex gap-5">
@@ -112,7 +112,7 @@ const AddConsultant = () => {
               value={formData.country_code}
               onChange={handleChange}
               required
-              className="w-full mt-1 p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+              className=" mt-1 p-2 border border-gray-300 rounded-md w-full px-4 py-2"
             >
               <option value="">Select Country Code</option>
               <option value="+1">+1 (USA)</option>
@@ -127,7 +127,7 @@ const AddConsultant = () => {
               value={formData.phone}
               onChange={handleChange}
               required
-              className="w-full mt-1 p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+              className="w-full mt-1 p-2 border border-gray-300 rounded-md  px-4 py-2"
             />
           </div>
         </div>
@@ -139,7 +139,7 @@ const AddConsultant = () => {
             value={formData.whatsappNumber}
             onChange={handleChange}
             required
-            className="w-full mt-1 p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+            className="w-full mt-1 p-2 border border-gray-300 rounded-md  px-4 py-2"
           />
         </div>
         <div>

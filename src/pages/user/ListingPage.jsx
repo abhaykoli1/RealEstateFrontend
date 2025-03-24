@@ -17,6 +17,7 @@ import PropertySmallCard from "../../components/user/propertySmallCard";
 import shortProperty from "../../assets/shortProperty.png";
 import axios from "axios";
 import config from "../../common/config";
+import PropertySearch from "../../components/user/search";
 
 const menuItems = [
   { label: "Beds", icon: null, options: ["1 Bed", "2 Beds", "3 Beds"] },
@@ -90,24 +91,38 @@ const ListingProperties = () => {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
-  
-  console.log(properties);
-  useEffect(() => {
-    const fetchProperties = async () => {
-      try {
-        const response = await axios.get(`${config.API_URL}/api/property`);
-        // console.log(response.data.data);
-        setProperties(response.data.data); // Update state with API response
-      } catch (err) {
-        // setError(err.message);
-      } finally {
-        // setLoading(false);
-      }
-    };
 
-    fetchProperties();
-  }, []);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isNewestFirst, setIsNewestFirst] = useState(true);
+
+  // Filter properties based on search query
+  const filteredProperties = properties.filter((property) =>
+    property.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Sort filtered properties by createdAt (newest first or oldest first)
+  const sortedProperties = [...filteredProperties].sort((a, b) => {
+    const dateA = new Date(a.createdAt).getTime();
+    const dateB = new Date(b.createdAt).getTime();
+
+    return isNewestFirst ? dateB - dateA : dateA - dateB; // Toggle between newest/oldest
+  });
+
+  // console.log(properties);
+  // useEffect(() => {
+  //   const fetchProperties = async () => {
+  //     try {
+  //       const response = await axios.get(`${config.API_URL}/api/property`);
+  //       setProperties(response.data.data); // Update state with API response
+  //     } catch (err) {
+  //       // setError(err.message);
+  //     } finally {
+  //       // setLoading(false);
+  //     }
+  //   };
+
+  //   fetchProperties();
+  // }, []);
 
   // if (loading) return <p>Loading...</p>;
   // if (error) return <p className="text-red-500">Error: {error}</p>;
@@ -160,6 +175,7 @@ const ListingProperties = () => {
   const toggleDropdown = (index) => {
     setOpenDropdown(openDropdown === index ? null : index);
   };
+
   const [filterBar, setFilterBar] = useState(false);
 
   return (
@@ -189,7 +205,12 @@ const ListingProperties = () => {
 
               <div className=" space-x-4 lg:flex md:flex   hidden ">
                 <div className=" gap-3 flex flex-wrap relative lg:px-5">
-                  <a className="bg-white   px-7 py-3  items-center gap-3 rounded-md shadow-[0px_5px_10px_rgba(0,0,0,0.1)]">
+                  <PropertySearch
+                    setProperties={setProperties}
+                    properties={properties}
+                  />
+
+                  {/* <a className="bg-white   px-7 py-3  items-center gap-3 rounded-md shadow-[0px_5px_10px_rgba(0,0,0,0.1)]">
                     Commercial
                   </a>
                   {menuItems.map((item, index) => (
@@ -214,7 +235,7 @@ const ListingProperties = () => {
                         </div>
                       )}
                     </div>
-                  ))}
+                  ))} */}
                   <div className="flex bg-white shadow-[0px_5px_10px_rgba(0,0,0,0.1)]">
                     <a
                       className={`px-7 py-3 text-[16px]  flex items-center gap-3 transition-all cursor-pointer shadow-[0px_5px_10px_rgba(0,0,0,0.1)] rounded-l-md  ${
@@ -305,12 +326,31 @@ const ListingProperties = () => {
           ${activeTab === "map" ? "lg:flex-1/2" : "lg:w-full"}`}
           >
             <div className=" gap-5 xl:flex  hidden">
-              <div className="bg-white w-full h-12 shadow-[0px_5px_10px_rgba(0,0,0,0.1)] flex gap-10 py-3 px-5 rounded-md">
-                <FaSearch size={20} /> Search
+              <div className="bg-white w-full h-12 shadow-[0px_5px_10px_rgba(0,0,0,0.1)] flex items-center gap-5 py-3 px-5 rounded-md">
+                <FaSearch size={20} />
+                <input
+                  type="text"
+                  className="!w-full flex border-none outline-none text-xl"
+                  placeholder="Search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                {/* <ul>
+                    {filteredProperties.map((property) => (
+                      <li key={property.id}>{property.title}</li>
+                    ))}
+                  </ul> */}
               </div>
-              <a className="bg-white px-7 py-3 h-[49px] flex items-center gap-3 rounded-[5px] shadow-[0px_5px_10px_rgba(0,0,0,0.1)]">
-                Newest <FaChevronDown />
+
+              {/* Sort Button for Toggle Sorting */}
+              <a
+                className="bg-white px-7 py-3 h-[49px] flex items-center gap-3 rounded-[5px] shadow-[0px_5px_10px_rgba(0,0,0,0.1)] cursor-pointer"
+                onClick={() => setIsNewestFirst(!isNewestFirst)}
+              >
+                {isNewestFirst ? "Newest" : "Oldest"}
               </a>
+
+              {/* <FaChevronDown /> */}
             </div>
             <div className="lg:flex md:flex  hidden gap-5 justify-between xl:mt-3 ml-1 lg:mt-1 -mt-6">
               <div>
@@ -321,11 +361,22 @@ const ListingProperties = () => {
               </div>
             </div>
             <div className="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 lg:mt-4 md:mt-4 mt-0">
-              {properties.map((pro, index) => (
-                <div key={index}>
-                  <PropertyCard {...pro} />
-                </div>
-              ))}
+              {/* {properties.length > 0 &&
+                properties.map((pro, index) => (
+                  <div key={index}>
+                    <PropertyCard {...pro} />
+                  </div>
+                ))} */}
+              {/* Display Sorted and Filtered Properties */}
+              {sortedProperties.length > 0 ? (
+                sortedProperties.map((pro) => (
+                  <div key={pro.id}>
+                    <PropertyCard {...pro} />
+                  </div>
+                ))
+              ) : (
+                <p>No properties found</p>
+              )}
             </div>{" "}
           </div>
         </div>

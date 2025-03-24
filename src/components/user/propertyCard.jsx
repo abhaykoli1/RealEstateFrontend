@@ -11,9 +11,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import config from "../../common/config";
 import { useNavigate, useParams } from "react-router";
-// import { useEffect, useState } from "react";
-// import config from "../../common/config";
-// import axios from "axios";
 
 const PropertyCard = ({
   title,
@@ -37,6 +34,11 @@ const PropertyCard = ({
   off_plan,
   image,
   location,
+  communities,
+  developers,
+  beds,
+  shower,
+  sqr_foot,
 }) => {
   const [status, setStatus] = useState(null);
   const [pType, setPType] = useState(null);
@@ -44,13 +46,14 @@ const PropertyCard = ({
 
   useEffect(() => {
     const fetchPropertyStatus = async () => {
+      console.log("id" + property_status["_id"]);
       try {
         const response = await axios.get(
-          `${config.API_URL}/api/property-status/${property_status}`
+          `${config.API_URL}/api/property-status/${property_status["_id"]}`
         );
-        setStatus(response.data.data); // Store API response in state
+        setStatus(response.data.data);
       } catch (err) {
-        // setError(err.message);
+        console.log(err);
       }
     };
 
@@ -63,11 +66,11 @@ const PropertyCard = ({
     const fetchPropertyType = async () => {
       try {
         const response = await axios.get(
-          `${config.API_URL}/api/property-type/${property_type}`
+          `${config.API_URL}/api/property-type/${property_type["_id"]}`
         );
         setPType(response.data.data);
       } catch (err) {
-        // setError(err.message);
+        console.log(err);
       }
     };
 
@@ -79,9 +82,11 @@ const PropertyCard = ({
   const navigate = useNavigate();
 
   const handelPerticularProperty = (seoTitle) => {
-    navigate(`/property/${seoTitle}`);
+    const formattedTitle = seoTitle; // Replace all spaces with dashes
+    navigate(`/property/${formattedTitle}`);
   };
-  console.log("image : ", image[0]);
+
+  // console.log("image : ", image[0]);
   return (
     <div className="w-[95%] ml-2 bg-white shadow-lg  rounded-md overflow-hidden ">
       <div className="relative">
@@ -115,21 +120,15 @@ const PropertyCard = ({
           </div>
 
           <div className="ProPriceBlocks flex items-center gap-2  text-[#1C3A5E]">
-            {/* <span className="flex items-center gap-1 border border-[#1C3A5E] px-2 h-6 rounded-md">
-              <FaBed /> 4
+            <span className="flex items-center gap-1 border border-[#1C3A5E] px-2 h-6 rounded-md">
+              <FaBed /> {beds}
             </span>
             <span className="flex items-center gap-1 border border-[#1C3A5E] px-2 h-6 rounded-md">
-              <FaBath /> 4
-            </span> */}
-            {amenities.map((ani, index) => (
-              <span
-                key={index}
-                className="flex items-center gap-1 border border-[#1C3A5E] px-2 h-6 rounded-md"
-              >
-                <img src={ani?.amenities_img} alt="Amenity" className="h-5" />
-                <span className="text-sm text-[#1C3A5E]">{ani?.title}</span>
-              </span>
-            ))}
+              <FaBath /> {shower}
+            </span>
+            <span className="flex items-center gap-1 border border-[#1C3A5E] px-2 h-6 rounded-md">
+              <FaMap /> {sqr_foot}
+            </span>
           </div>
         </div>
         <div className="flex justify-between items-center mt-2">

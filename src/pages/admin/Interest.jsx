@@ -1,36 +1,46 @@
 import React, { useState } from "react";
+import ImageUploader from "../../common/ImageUpload";
+import config from "../../common/config";
+import axios from "axios";
 
 function Interests() {
-  const [title, setTitle] = useState("");
-  const [image, setImage] = useState(null);
+  const [formData, setFormData] = useState({
+    title: "",
+    image: null,
+  });
 
-  const handleTitleChange = (e) => setTitle(e.target.value);
-  const handleImageChange = (e) => setImage(e.target.files[0]);
+  const handleUploadImage = (uploadedFile) => {
+    setFormData({ ...formData, image: uploadedFile[0] });
+  };
 
-  const handleSubmit = (e) => {
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("image", image);
-
-    // Example of sending the form data to the server (adjust the URL to your backend)
-    fetch("/submit", {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Success:", data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
+    try {
+      const response = await axios.post(
+        `${config.API_URL}/api/intrest`,
+        formData
+      );
+      alert("Interest Added Successfully");
+      setFormData({
+        title: "",
+        image: null,
       });
+    } catch (error) {
+      console.error("Error:", error);
+      alert(error.response.data.message);
+    }
   };
 
   return (
-    <div className=" mx-auto w-full p-6 ">
-      <h1 className="!text-3xl font-bold mb-4 text">Interest Options</h1>
+    <div className=" mx-auto w-full p-3 ">
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Title Field */}
         <div>
@@ -43,30 +53,31 @@ function Interests() {
           <input
             type="text"
             id="title"
-            value={title}
-            onChange={handleTitleChange}
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
             required
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         {/* Image Upload Field */}
+
         <div>
-          <label
-            htmlFor="image"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Image:
+          <label htmlFor="image" className="block text-sm font-medium">
+            Testimonial Image:
           </label>
-          <input
-            type="file"
-            id="image"
-            onChange={handleImageChange}
-            accept="image/*"
-            required
-            className="mt-1 block w-full text-sm text-gray-500 file:py-2 file:px-4 file:border file:rounded-md file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <ImageUploader onUpload={handleUploadImage} />
         </div>
+        {formData.image && (
+          <div className="mt-4">
+            <img
+              src={formData.image}
+              alt="Testimonial Image"
+              className="w-24 h-24 rounded-md object-cover"
+            />
+          </div>
+        )}
 
         {/* Submit Button */}
         <button

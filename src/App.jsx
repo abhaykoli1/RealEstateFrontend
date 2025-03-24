@@ -23,6 +23,10 @@ import AddPropertyStatus from "./pages/admin/Add-Property-Status";
 import AddConsultant from "./pages/admin/addConsultant";
 import AdminLogin from "./pages/auth/AdminLogin";
 import CheckAuth from "./components/auth/check-auth";
+import AddDeveloper from "./pages/admin/add-developer";
+import AddCommunity from "./pages/admin/add-communities";
+import AdminDashboard from "./pages/admin/dashboard";
+import CommingSoon from "./pages/user/LandingPage/CommingSoon";
 
 function App() {
   return (
@@ -32,7 +36,7 @@ function App() {
         <Route path="/" element={<UserLayout />}>
           <Route path="" element={<LandingPage />} />
           <Route path="listing" element={<ListingProperties />} />
-          <Route path="property" element={<PropertyPerticular />} />
+          <Route path="property/:seoTitle" element={<PropertyPerticular />} />
           <Route path="blog" element={<PerticularBlog />} />
           <Route path="developers" element={<Developers />} />
           <Route path="developer" element={<PerticularDevelopers />} />
@@ -50,10 +54,10 @@ function App() {
             </CheckAuth>
           }
         >
+          <Route path="" element={<AdminDashboard />} />
           <Route path="interests" element={<Interests />} />
           <Route path="add-property-status" element={<AddPropertyStatus />} />
           <Route path="add-property-type" element={<AddPropertyType />} />
-          <Route path="all-property-types" element={<AllPropertyTypes />} />
           <Route path="edit-property-type/:id" element={<EditPropertyType />} />
           <Route path="blog-category" element={<BlogCategory />} />
           <Route path="add-blog" element={<AddBlog />} />
@@ -62,6 +66,10 @@ function App() {
           <Route path="testimonial" element={<Testimonial />} />
           <Route path="add-consultant" element={<AddConsultant />} />
           <Route path="add-property" element={<AddProperty />} />
+          <Route path="add-developer" element={<AddDeveloper />} />
+          <Route path="add-community" element={<AddCommunity />} />
+
+          <Route path="all-property-types" element={<AllPropertyTypes />} />
         </Route>
       </Routes>
     </div>

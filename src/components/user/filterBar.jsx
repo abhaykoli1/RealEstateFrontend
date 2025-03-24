@@ -18,6 +18,7 @@ import React, { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { useNavigate } from "react-router-dom";
 import { FaChevronDown, FaDollarSign, FaLocationArrow } from "react-icons/fa";
+import PropertySearch from "./search";
 // Add Property ,
 const adminSidebarMenuItems = [
   {
@@ -149,7 +150,9 @@ const Filter = ({ setFilterBar, filterBar }) => {
           </div>
 
           <div className="flex flex-wrap gap-2 my-2 ">
-            <a className="bg-white   px-12 py-1.5 text-[12px] items-center gap-3 rounded-md shadow-[0px_5px_10px_rgba(0,0,0,0.1)]">
+            <PropertySearch />
+
+            {/* <a className="bg-white   px-12 py-1.5 text-[12px] items-center gap-3 rounded-md shadow-[0px_5px_10px_rgba(0,0,0,0.1)]">
               Commercial
             </a>
             {menuItems.map((item, index) => (
@@ -174,7 +177,7 @@ const Filter = ({ setFilterBar, filterBar }) => {
                   </div>
                 )}
               </div>
-            ))}
+            ))} */}
           </div>
 
           {/* Price Range */}

@@ -1,8 +1,10 @@
+import axios from "axios";
 import React, { useState } from "react";
+import config from "../../common/config";
 
 function AboutUs() {
   const [formData, setFormData] = useState({
-    Long_Description: "",
+    long_description: "",
     first_dec: "",
     second_dec: "",
     third_dec: "",
@@ -10,61 +12,53 @@ function AboutUs() {
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const { Long_Description, first_dec, second_dec, third_dec, fourth_dec } =
-      formData;
-
-    // Example of sending the form data to the server (adjust the URL to your backend)
-    fetch("/submit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        Long_Description,
-        first_dec,
-        second_dec,
-        third_dec,
-        fourth_dec,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Success:", data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
+    try {
+      const response = await axios.post(
+        `${config.API_URL}/api/about-us`,
+        formData
+      );
+      // console.log("Response:", response.data);
+      alert("Content Added Successfully");
+      setFormData({
+        long_description: "",
+        first_dec: "",
+        second_dec: "",
+        third_dec: "",
+        fourth_dec: "",
       });
+    } catch (error) {
+      console.error("Error:", error);
+      alert(error.response.data.message);
+    }
   };
 
   return (
-    <div className="mx-auto w-full p-6">
-      <h1 className="!text-3xl font-bold mb-4 text-center">About Us</h1>
+    <div className="mx-auto w-full p-3">
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Long Description Field */}
         <div>
           <label
-            htmlFor="Long_Description"
+            htmlFor="long_description"
             className="block text-sm font-medium text-gray-700"
           >
             Long Description:
           </label>
           <textarea
-            id="Long_Description"
-            name="Long_Description"
-            value={formData.Long_Description}
+            id="long_description"
+            name="long_description"
+            value={formData.long_description}
             onChange={handleChange}
             required
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md  focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -82,7 +76,7 @@ function AboutUs() {
             value={formData.first_dec}
             onChange={handleChange}
             required
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md  focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -100,7 +94,7 @@ function AboutUs() {
             value={formData.second_dec}
             onChange={handleChange}
             required
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md  focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -118,7 +112,7 @@ function AboutUs() {
             value={formData.third_dec}
             onChange={handleChange}
             required
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md  focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -136,14 +130,14 @@ function AboutUs() {
             value={formData.fourth_dec}
             onChange={handleChange}
             required
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md  focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md  hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
           Submit
         </button>

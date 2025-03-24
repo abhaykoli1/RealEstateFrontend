@@ -1,89 +1,95 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import config from "../../common/config";
 
 function AddBlog() {
   const [formData, setFormData] = useState({
-    seo_Title: "",
-    seo_Description: "",
+    seo_title: "",
+    seo_description: "",
     title: "",
-    Description: "",
+    description: "",
     category_id: "",
   });
 
+  const [blogCategories, setBlogCategories] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    axios
+      .get(`${config.API_URL}/api/blog-category`)
+      .then((response) => setBlogCategories(response.data.data))
+      .catch((error) => console.log(error.message));
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
+    setFormData((prevState) => ({
+      ...prevState,
       [name]: value,
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
 
-    const { seo_Title, seo_Description, title, Description, category_id } =
-      formData;
-
-    // Example of sending the form data to the server (adjust the URL to your backend)
-    fetch("/submit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        seo_Title,
-        seo_Description,
-        title,
-        Description,
-        category_id,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Success:", data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
+    try {
+      await axios.post(`${config.API_URL}/api/blog`, formData);
+      alert("Blog Added Successfully");
+      setFormData({
+        seo_title: "",
+        seo_description: "",
+        title: "",
+        description: "",
+        category_id: "",
       });
+    } catch (error) {
+      alert(error.response?.data?.message || "An error occurred");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="mx-auto w-full p-6">
-      <h1 className="!text-3xl font-bold mb-4 text-center">Add Blog</h1>
+    <div className="mx-auto w-full p-3">
       <form onSubmit={handleSubmit} className="space-y-4">
+        {error && <p className="text-red-500 text-center">{error}</p>}
         {/* SEO Title Field */}
         <div>
           <label
-            htmlFor="seo_Title"
+            htmlFor="seo_title"
             className="block text-sm font-medium text-gray-700"
           >
             SEO Title:
           </label>
           <input
             type="text"
-            id="seo_Title"
-            name="seo_Title"
-            value={formData.seo_Title}
+            id="seo_title"
+            name="seo_title"
+            value={formData.seo_title}
             onChange={handleChange}
             required
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         {/* SEO Description Field */}
         <div>
           <label
-            htmlFor="seo_Description"
+            htmlFor="seo_description"
             className="block text-sm font-medium text-gray-700"
           >
             SEO Description:
           </label>
           <textarea
-            id="seo_Description"
-            name="seo_Description"
-            value={formData.seo_Description}
+            id="seo_description"
+            name="seo_description"
+            value={formData.seo_description}
             onChange={handleChange}
             required
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -102,25 +108,25 @@ function AddBlog() {
             value={formData.title}
             onChange={handleChange}
             required
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         {/* Description Field */}
         <div>
           <label
-            htmlFor="Description"
+            htmlFor="description"
             className="block text-sm font-medium text-gray-700"
           >
             Description:
           </label>
           <textarea
-            id="Description"
-            name="Description"
-            value={formData.Description}
+            id="description"
+            name="description"
+            value={formData.description}
             onChange={handleChange}
             required
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -128,7 +134,7 @@ function AddBlog() {
         <div>
           <label
             htmlFor="category_id"
-            className="block text-sm font-medium text-gray-700"
+            className="text-gray-700 text-sm block font-medium mb-1.5"
           >
             Category:
           </label>
@@ -138,24 +144,26 @@ function AddBlog() {
             value={formData.category_id}
             onChange={handleChange}
             required
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="border p-2 border-gray-300 py-[9px] rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="" disabled>
-              Select a category
+              Select Category
             </option>
-            <option value="1">Category 1</option>
-            <option value="2">Category 2</option>
-            <option value="3">Category 3</option>
-            {/* Add more categories as needed */}
+            {blogCategories.map((category) => (
+              <option key={category._id} value={category._id}>
+                {category.title}
+              </option>
+            ))}
           </select>
         </div>
 
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
+          disabled={loading}
         >
-          Add Blog
+          {loading ? "Adding..." : "Add Blog"}
         </button>
       </form>
     </div>

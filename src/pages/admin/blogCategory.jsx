@@ -1,33 +1,33 @@
+import axios from "axios";
 import React, { useState } from "react";
+import config from "../../common/config";
 
 function BlogCategory() {
   const [title, setTitle] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleTitleChange = (e) => setTitle(e.target.value);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
 
-    const formData = new FormData();
-    formData.append("title", title);
-
-    // Example of sending the form data to the server (adjust the URL to your backend)
-    fetch("/submit", {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Success:", data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+    try {
+      await axios.post(`${config.API_URL}/api/blog-category`, { title });
+      alert("Blog Category added successfully!");
+      setTitle(""); // Reset form after successful submission
+    } catch (error) {
+      setError(error.response?.data?.message || error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="mx-auto w-full p-6">
-      <h1 className="!text-3xl font-bold mb-4 text-center">Blog Category</h1>
+    <div className="mx-auto w-full p-3">
+      {error && <p className="text-red-500 text-center mb-4">{error}</p>}
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Title Field */}
         <div>
@@ -43,16 +43,16 @@ function BlogCategory() {
             value={title}
             onChange={handleTitleChange}
             required
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md  focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
-        {/* Submit Button */}
         <button
           type="submit"
-          className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
+          disabled={loading}
         >
-          Submit
+          {loading ? "Submitting..." : "Add Blog Category"}
         </button>
       </form>
     </div>

@@ -23,14 +23,6 @@ const Header = ({ setSidebar, sidebar, setFilterBar, filterBar }) => {
           />
         </div>
         <div className="">
-          <div className="xl:flex hidden justify-end mb-2 ">
-            <select className="!bg-white border border-[#A9B9D6] h-[28px] w-[100px] rounded-md py- text-black font-bold px-">
-              <option value="USD">🇺🇸 USD</option>
-              <option value="INR">🇮🇳 INR</option>
-              <option value="EUR">🇪🇺 EUR</option>
-            </select>
-          </div>
-
           <div className="flex justify-between items-center space-x-3">
             <div className="xl:flex hidden flex-row items-center xl:space-x-7">
               <ul className=" flex xl:space-x-7 text-[15px]  ">
@@ -52,16 +44,13 @@ const Header = ({ setSidebar, sidebar, setFilterBar, filterBar }) => {
                 <li>CONTACT</li>
                 <li>ABOUT</li>
               </ul>
-              <div className="flex relative gap-3 w-[205px] -mr-3  h-[35px] border border-[#A9B9D6] rounded-[5px]">
-                <input
-                  placeholder="Search..."
-                  className="active:border-none px-[14px]"
-                />
-                <AiOutlineSearch
-                  size={25}
-                  color="text-black"
-                  className=" absolute right-3 top-1 "
-                />
+              <div className="xl:flex hidden justify-end  ">
+                <select className="!bg-white border border-[#A9B9D6] h-[28px] w-[100px] rounded-md py- text-black font-bold px-">
+                  <option value="AED">🇪🇺 AED</option>
+                  <option value="USD">🇺🇸 USD</option>
+                  <option value="INR">🇮🇳 INR</option>
+                  <option value="EUR">🇪🇺 EUR</option>
+                </select>
               </div>
             </div>
 
