@@ -1,6 +1,6 @@
 import React from "react";
 
-const TestimonialCardCompo = ({ id, image, name, post, text }) => {
+const TestimonialCardCompo = ({ id, image, name, profession, description }) => {
   return (
     <div className="w-full text-center md:text-left pb-20 px-5">
       <div className="relative text-center">
@@ -16,10 +16,10 @@ const TestimonialCardCompo = ({ id, image, name, post, text }) => {
           <p className="mt-2 text-lg text-center mx-auto font-semibold text-gray-900">
             {name}
           </p>
-          <p className="mx-auto text-[10px] font-normal mb-3">{post}</p>
+          <p className="mx-auto text-[10px] font-normal mb-3">{profession}</p>
         </div>
         <p className="text-gray-700 text-lg  leading-relaxed max-w-xl mx-auto">
-          {text}
+          {description}
         </p>
         <span className="text-5xl text-[#2F5FA7] absolute -bottom-12 right-4">
           ”

@@ -22,14 +22,17 @@ const AdminHeader = ({ setSidebar, sidebar }) => {
     "/admin/testimonial": "Testimonial",
     "/admin/why-choose-us": "Why Choose Us",
     "/admin/interests": "Interest Options",
+    "/admin/add-banner": "Add Banner Images",
+    "/admin/add-banner": "Add Admin",
+    "/admin/add-faqs": "Add FAQ`S",
   };
 
   const routeName = routeMap[location.pathname] || "Unknown Route";
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem("isAuthenticated"); // Remove authentication
-    navigate("/admin/login"); // Redirect to login page
+    localStorage.removeItem("isAuthenticated");
+    navigate("/admin/login");
   };
 
   return (
@@ -43,7 +46,6 @@ const AdminHeader = ({ setSidebar, sidebar }) => {
           color="#fff"
           className="h-9  w-10 border rounded-md border-white p-1 cursor-pointer"
         />
-        {/* <img src={logo} alt="logo" className="h-14 z-0 " /> */}
         <label
           className={`lg:text-2xl text-xl lg:pl-[190px] text-white font-bold`}
         >
@@ -57,22 +59,6 @@ const AdminHeader = ({ setSidebar, sidebar }) => {
         >
           LOGOUT
         </button>
-        {/* <button
-          className={`bg-slate-800 text-white  lg:h-full lg:w-20 md:w-20 sm:w-20 w-10 flex items-center justify-center  h-8  ${
-            routeName === "Admin Rides" || routeName === "Add Reviews"
-              ? "flex"
-              : "hidden"
-          }`}
-          // onClick={() => {
-          //   routeName === "Admin Rides"
-          //     ? setOpenAddRidesDialog(true)
-          //     : setOpenAddReviews(true);
-          // }}
-        >
-          <Plus size={18} />
-          <span className="hidden lg:flex md:flex sm:flex">New</span>
-        </button> */}
-        {/* <Avtar hi={false} AvtarClass={"w-48 lg:mt-20 mt-[68px] -mr-11"} /> */}
       </div>
     </header>
   );

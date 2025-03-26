@@ -21,6 +21,12 @@ const adminSidebarMenuItems = [
   },
 
   {
+    id: "Banner Images",
+    label: "Banner Images",
+    path: "/admin/add-banner",
+  },
+
+  {
     id: "interests",
     label: "Interests",
     path: "/admin/interests",
@@ -40,6 +46,11 @@ const adminSidebarMenuItems = [
     id: "why-choose-us",
     label: "Why Choose Us",
     path: "/admin/why-choose-us",
+  },
+  {
+    id: "add-faqs",
+    label: "Add Faqs",
+    path: "/admin/add-faqs",
   },
   {
     id: "testimonial",

@@ -17,7 +17,7 @@ const UserLayout = () => {
         filterBar={filterBar}
         setFilterBar={setFilterBar}
       />
-      <div className="z-20">
+      <div className="z-40">
         <div
           onClick={() => setSidebar(false)}
           className={` ${
@@ -27,7 +27,7 @@ const UserLayout = () => {
         <Sidebar sidebar={sidebar} setSidebar={setSidebar} />
       </div>
 
-      <div className="h-full pt-[80px]">
+      <div className="h-full pt-[80px] z-30">
         <Outlet />
       </div>
       <Footer />

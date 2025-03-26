@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { FaChevronDown, FaDollarSign, FaLocationArrow } from "react-icons/fa";
 import dubai from "../../assets/dubai.png";
+import axios from "axios";
+import config from "../../common/config";
+import { useNavigate } from "react-router";
 
 const menuItems = [
   {
@@ -21,12 +24,24 @@ const Developers = () => {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [activeTab, setActiveTab] = useState("map");
 
+  const [developers, setDevelopers] = useState([]);
+  console.log("developers", developers);
+
+  useEffect(() => {
+    axios
+      .get(`${config.API_URL}/api/developer`)
+      .then((response) => setDevelopers(response.data.data))
+      .catch((error) => console.log(error.message));
+  }, []);
+
   const toggleDropdown = (index) => {
     setOpenDropdown(openDropdown === index ? null : index);
   };
+
+  const navigate = useNavigate();
   return (
-    <section className="p-6 lg:mt-0 md:mt-0 -mt-10">
-      <div className="max-w-7xl mx-auto px-5">
+    <section className="lg:mt-4 md:mt-4 -mt-2 mb-8">
+      <div className="max-w-7xl mx-auto lg:px-10 md:px-10 px-5">
         {/* Breadcrumb Navigation */}
         <div className="text-gray-500 text-sm mb-4">
           <a href="#" className="hover:underline">
@@ -64,20 +79,16 @@ const Developers = () => {
 
         {/* Grid Display */}
         <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 grid-cols-1 gap-5 max-w-6xl mx-auto">
-          {properties.map((property, index) => (
+          {developers.map((developer, index) => (
             <div
+              onClick={() => navigate(`/developer/${developer._id}`)}
               key={index}
-              className="relative flex items-center rounded-[5px] justify-center h-[259px] shadow-2xl bg-white overflow-hidden group"
+              className="relative hover:scale-[102%] transition-all duration-500 flex items-center rounded-[5px] justify-center h-[259px] shadow-2xl bg-white overflow-hidden group"
             >
-              <img src={dubai} className="h-[259px] w-full object-cover" />
-
-              {/* Blue overlay */}
-              <div className="absolute bottom-0 left-0 w-full rounded-[5px] h-0 bg-gradient-to-t to-[#3261A8] via-[#3261A8] from-[#87b3f5] opacity-0 group-hover:h-1/2 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-start p-4">
-                <h3 className="text-white  text-[20px]">DUBAI PROPERTIES</h3>
-                <p className="text-white font-semibold text-[14px]">
-                  Give you a general notion of your study topic in the
-                </p>
-              </div>
+              <img
+                src={developer.image}
+                className="h-[259px] w-full object-cover"
+              />
             </div>
           ))}
         </div>

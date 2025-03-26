@@ -46,28 +46,24 @@ const adminSidebarMenuItems = [
     // icon: <ReviewsOutlined className="text-slate-700" />,
   },
   {
-    id: "more",
-    label: "MORE",
-    path: "/",
-    // icon: <QueryStats className="text-slate-700" />,
+    id: "communities",
+    label: "COMMUNITIES",
+    path: "/communities",
   },
   {
-    id: "insight",
-    label: "INSIGHT",
-    path: "/",
-    // icon: <QueryStats className="text-slate-700" />,
+    id: "developers",
+    label: "DEVELOPERS",
+    path: "/developers",
   },
   {
     id: "contact",
     label: "CONTACT",
     path: "/",
-    // icon: <QueryStats className="text-slate-700" />,
   },
   {
     id: "about",
     label: "ABOUT",
     path: "/",
-    // icon: <QueryStats className="text-slate-700" />,
   },
 ];
 

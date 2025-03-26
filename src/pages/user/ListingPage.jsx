@@ -18,6 +18,9 @@ import shortProperty from "../../assets/shortProperty.png";
 import axios from "axios";
 import config from "../../common/config";
 import PropertySearch from "../../components/user/search";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import DateCompo from "../../components/user/date";
 
 const menuItems = [
   { label: "Beds", icon: null, options: ["1 Bed", "2 Beds", "3 Beds"] },
@@ -89,6 +92,9 @@ const smallProperty = [
 
 const ListingProperties = () => {
   const [properties, setProperties] = useState([]);
+
+  console.log("Listing properties", properties);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -107,25 +113,6 @@ const ListingProperties = () => {
 
     return isNewestFirst ? dateB - dateA : dateA - dateB; // Toggle between newest/oldest
   });
-
-  // console.log(properties);
-  // useEffect(() => {
-  //   const fetchProperties = async () => {
-  //     try {
-  //       const response = await axios.get(`${config.API_URL}/api/property`);
-  //       setProperties(response.data.data); // Update state with API response
-  //     } catch (err) {
-  //       // setError(err.message);
-  //     } finally {
-  //       // setLoading(false);
-  //     }
-  //   };
-
-  //   fetchProperties();
-  // }, []);
-
-  // if (loading) return <p>Loading...</p>;
-  // if (error) return <p className="text-red-500">Error: {error}</p>;
 
   const sliderRef = useRef(null);
   const settings = {
@@ -171,12 +158,21 @@ const ListingProperties = () => {
   };
   const [openDropdown, setOpenDropdown] = useState(null);
   const [activeTab, setActiveTab] = useState("map");
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const toggleDropdown = (index) => {
     setOpenDropdown(openDropdown === index ? null : index);
   };
 
   const [filterBar, setFilterBar] = useState(false);
+
+  const markers = [
+    { id: 1, position: [37.7749, -122.4194], label: "San Francisco" },
+    { id: 2, position: [34.0522, -118.2437], label: "Los Angeles" },
+    { id: 3, position: [40.7128, -74.006], label: "New York" },
+  ];
+
+  const defaultCenter = [37.7749, -122.4194]; // Centered around San Francisco
 
   return (
     <section className=" h-full lg:pt-12 md:py-12 !-mt-3">
@@ -204,39 +200,17 @@ const ListingProperties = () => {
               ></div>
 
               <div className=" space-x-4 lg:flex md:flex   hidden ">
-                <div className=" gap-3 flex flex-wrap relative lg:px-5">
+                <div className=" gap-3 flex flex-wrap relative ">
                   <PropertySearch
+                    setShowDropdown={setShowDropdown}
+                    showDropdown={showDropdown}
+                    setActiveTab={setActiveTab}
+                    activeTab={activeTab}
                     setProperties={setProperties}
                     properties={properties}
+                    map={true}
                   />
-
-                  {/* <a className="bg-white   px-7 py-3  items-center gap-3 rounded-md shadow-[0px_5px_10px_rgba(0,0,0,0.1)]">
-                    Commercial
-                  </a>
-                  {menuItems.map((item, index) => (
-                    <div key={index} className="relative">
-                      <a
-                        onClick={() => toggleDropdown(index)}
-                        className="bg-white px-7 py-3 flex items-center gap-3 rounded-md shadow-[0px_5px_10px_rgba(0,0,0,0.1)]"
-                      >
-                        {item.icon} {item.label} <FaChevronDown />
-                      </a>
-                      {openDropdown === index && (
-                        <div className="absolute mt-2 bg-white shadow-md rounded-md w-48 z-10">
-                          {item.options.map((option, i) => (
-                            <div
-                              key={i}
-                              className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                              onClick={() => setOpenDropdown(null)}
-                            >
-                              {option}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ))} */}
-                  <div className="flex bg-white shadow-[0px_5px_10px_rgba(0,0,0,0.1)]">
+                  {/* <div className="flex bg-white shadow-[0px_5px_10px_rgba(0,0,0,0.1)] lg:mx-5">
                     <a
                       className={`px-7 py-3 text-[16px]  flex items-center gap-3 transition-all cursor-pointer shadow-[0px_5px_10px_rgba(0,0,0,0.1)] rounded-l-md  ${
                         activeTab === "map"
@@ -257,7 +231,7 @@ const ListingProperties = () => {
                     >
                       List
                     </a>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -295,12 +269,33 @@ const ListingProperties = () => {
               activeTab === "map" ? "lg:flex-1/3" : "lg:flex-1 -mx-5"
             }`}
           >
-            <img
-              src={map}
+            <div
               className={`w-full rounded-md ${
                 activeTab === "map" ? "" : "hidden"
               }`}
-            />
+            >
+              <MapContainer
+                center={defaultCenter}
+                zoom={7}
+                style={{
+                  height: "570px",
+                  width: "100%",
+                  borderRadius: "5px",
+                  zIndex: 0,
+                }}
+              >
+                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                {properties.map((property) => (
+                  <Marker
+                    key={property.id}
+                    position={[property.latitude, property.longitude]}
+                  >
+                    <Popup>{property.label}</Popup>
+                  </Marker>
+                ))}
+              </MapContainer>
+            </div>
+
             <div className="absolute lg:hidden md:hidden gap-4  bottom-4 left-1/2 -translate-x-1/2 w-full  flex flex-col justify-center">
               <div
                 className={`mt-10  relative mx- ${
@@ -308,7 +303,7 @@ const ListingProperties = () => {
                 }`}
               >
                 <Slider ref={sliderRef} {...settings}>
-                  {smallProperty.map((pro, index) => (
+                  {properties?.map((pro, index) => (
                     <div key={index} className="slick-slide mx-20">
                       <div className="flex">
                         <PropertySmallCard {...pro} />
@@ -335,11 +330,6 @@ const ListingProperties = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
-                {/* <ul>
-                    {filteredProperties.map((property) => (
-                      <li key={property.id}>{property.title}</li>
-                    ))}
-                  </ul> */}
               </div>
 
               {/* Sort Button for Toggle Sorting */}
@@ -361,12 +351,6 @@ const ListingProperties = () => {
               </div>
             </div>
             <div className="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 lg:mt-4 md:mt-4 mt-0">
-              {/* {properties.length > 0 &&
-                properties.map((pro, index) => (
-                  <div key={index}>
-                    <PropertyCard {...pro} />
-                  </div>
-                ))} */}
               {/* Display Sorted and Filtered Properties */}
               {sortedProperties.length > 0 ? (
                 sortedProperties.map((pro) => (
@@ -377,10 +361,16 @@ const ListingProperties = () => {
               ) : (
                 <p>No properties found</p>
               )}
-            </div>{" "}
+            </div>
           </div>
         </div>
       </div>
+      <div
+        onClick={() => setShowDropdown(false)}
+        className={`${
+          showDropdown ? "absolute" : " "
+        }   top-0 right-0 left-0 bottom-0`}
+      ></div>
     </section>
   );
 };

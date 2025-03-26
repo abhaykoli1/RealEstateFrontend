@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import config from "../../common/config";
+import ImageUploader from "../../common/ImageUpload";
 
 function AddBlog() {
   const [formData, setFormData] = useState({
@@ -22,12 +23,23 @@ function AddBlog() {
       .catch((error) => console.log(error.message));
   }, []);
 
+  console.log(formData);
   const handleChange = (e) => {
     const { name, value } = e.target;
+    let updatedValue = value;
+
+    if (name === "seo_title") {
+      updatedValue = value.replace(/\s+/g, "-");
+    }
+
     setFormData((prevState) => ({
       ...prevState,
-      [name]: value,
+      [name]: updatedValue,
     }));
+  };
+
+  const handleUploadImage = (uploadedFile) => {
+    setFormData({ ...formData, image: uploadedFile[0] });
   };
 
   const handleSubmit = async (e) => {
@@ -156,6 +168,20 @@ function AddBlog() {
             ))}
           </select>
         </div>
+
+        <div>
+          <label className="block text-sm font-medium">Profile Picture</label>
+          <ImageUploader onUpload={handleUploadImage} />
+        </div>
+        {formData.image && (
+          <div className="mt-4">
+            <img
+              src={formData.image}
+              alt="Blog Image"
+              className="w-24 h-24 rounded-md object-cover"
+            />
+          </div>
+        )}
 
         {/* Submit Button */}
         <button

@@ -1,7 +1,9 @@
+import axios from "axios";
 import dubai from "../../../assets/dubai.png";
 import Divider from "../../../components/user/divider";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
+import config from "../../../common/config";
 const Partners = () => {
   const partnersData = [
     {
@@ -71,33 +73,46 @@ const Partners = () => {
     ],
   };
 
-  return (
-    <section className="bg-[#F4F4F4] mt-8 py-6 pb-14">
-      <h2 className="lg:text-[32px] px-5 md:text-[32px]  text-[25px] font-bold text-center mb-4 ">
-        WE PARTNER WITH THE BEST
-      </h2>
-      <Divider />
+  const [communities, setCommunities] = useState([]);
+  // console.log(communities);
 
-      <div className="max-w-[1320px] mx-auto  px-5 ">
-        {/* <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"> */}
-        <div className="  relative mt-6">
-          <Slider {...settings}>
-            {partnersData.map((partner, index) => (
-              <div
-                key={index}
-                className="slick-slide   relative  p-0 hover:scale-105 transition-all duration-300"
-              >
-                <img
-                  src={partner.image}
-                  alt={partner.name}
-                  className="w-[300px] h-auto  object-cover"
-                />
-              </div>
-            ))}
-          </Slider>
+  useEffect(() => {
+    axios
+      .get(`${config.API_URL}/api/communities`)
+      .then((response) => setCommunities(response.data.data))
+      .catch((error) => console.log(error.message));
+  }, []);
+
+  return (
+    <section className="bg-[#F4F4F4]">
+      {communities.length > 0 ? (
+        <div className=" mt-8 py-6 pb-14">
+          <h2 className="lg:text-[32px] px-5 md:text-[32px]  text-[25px] font-bold text-center mb-4 ">
+            WE PARTNER WITH THE BEST
+          </h2>
+          <Divider />
+          <div className="max-w-[1320px] mx-auto  mt-10 px-5 ">
+            <div className="  relative mt-6">
+              <Slider {...settings}>
+                {communities.map((partner, index) => (
+                  <div
+                    key={index}
+                    className="slick-slide   relative  p-0 hover:scale-105 transition-all duration-300"
+                  >
+                    <img
+                      src={partner.logo_image}
+                      alt={partner.name}
+                      className=" h-auto  object-cover"
+                    />
+                  </div>
+                ))}
+              </Slider>
+            </div>
+          </div>
         </div>
-      </div>
-      {/* </div> */}
+      ) : (
+        ""
+      )}
     </section>
   );
 };

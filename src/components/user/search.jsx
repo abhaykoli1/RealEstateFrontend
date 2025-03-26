@@ -1,14 +1,25 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import config from "../../common/config";
-import { FaAngleDown } from "react-icons/fa";
+// import { GoChevronDown } from "react-icons/fa";
+import { GoChevronDown } from "react-icons/go";
 
-export default function PropertySearch({ setProperties, properties }) {
+export default function PropertySearch({
+  setProperties,
+  properties,
+  setActiveTab,
+  activeTab,
+  map,
+  setShowDropdown,
+  showDropdown,
+}) {
   const [filters, setFilters] = useState({
     property_type: "",
     property_status: "",
     comerical: null,
     beds: "",
+    price: "",
+    location: "",
   });
 
   //   const [properties, setProperties] = useState([]);
@@ -16,12 +27,15 @@ export default function PropertySearch({ setProperties, properties }) {
   const [selectedPropertyType, setSelectedPropertyType] = useState(null);
   const [selectedPropertyStatus, setSelectedPropertyStatus] = useState(null);
   const [selectedBeds, setSelectedBeds] = useState(null);
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [dropdownType, setDropdownType] = useState(null); // New state to track which dropdown is showing
+  const [selectedPrice, setSelectedPrice] = useState(null);
+
+  const [selectedLocation, setSelectedLocation] = useState([]);
+
+  const [dropdownType, setDropdownType] = useState(null);
   const [propertyStatus, setPropertyStatus] = useState([]);
   const [propertyType, setPropertyType] = useState([]);
 
-  console.log("properties", properties);
+  console.log("searched Properties", properties);
   useEffect(() => {
     axios
       .get(`${config.API_URL}/api/property-type`)
@@ -65,6 +79,13 @@ export default function PropertySearch({ setProperties, properties }) {
     { _id: "4", title: "4+ Beds" },
   ];
 
+  const location = [
+    { _id: "1", loc: "Dubai" },
+    { _id: "2", loc: "Dubas" },
+    { _id: "3", loc: "Dubai" },
+    { _id: "4", loc: "Dubai" },
+  ];
+
   const price = [
     { _id: "1", from: "1 M", to: "4 M" },
     { _id: "2", from: "4 M", to: "8 M" },
@@ -92,15 +113,27 @@ export default function PropertySearch({ setProperties, properties }) {
     } else if (typeCategory === "beds") {
       setFilters({ ...filters, beds: type._id });
       setSelectedBeds(type.title);
+    } else if (typeCategory === "price") {
+      setFilters({ ...filters, price: type._id });
+      setSelectedPrice([type.from, " - ", type.to]);
+    } else if (typeCategory === "location") {
+      setFilters({ ...filters, location: type._id });
+      setSelectedLocation(type.loc);
     }
 
     setShowDropdown(false);
   };
 
+  console.log(filters);
+
   return (
     <section>
       <div className=" gap-3 flex flex-wrap relative lg:px-5">
-        <div className="bg-white px-7 py-3 flex items-center gap-3 rounded-md shadow-[0px_5px_10px_rgba(0,0,0,0.1)] border-gray-300 p-2   cursor-pointer ">
+        <div
+          className={`${
+            filters.comerical === null ? "" : ""
+          } border border-gray-100 px-5 py-3 flex items-center gap-3 rounded-md shadow-[0px_5px_10px_rgba(0,0,0,0.1)]  p-2   cursor-pointer `}
+        >
           <input
             type="checkbox"
             id="comerical"
@@ -118,7 +151,7 @@ export default function PropertySearch({ setProperties, properties }) {
         </div>
         {/* Beds */}
         <div
-          className="bg-white gap-3 px-7 py-3 flex items-center  rounded-md shadow-[0px_5px_10px_rgba(0,0,0,0.1)] border-gray-300 p-2   cursor-pointer "
+          className="bg-white gap-3 border border-gray-100 pl-5 py-3 flex items-center  rounded-md shadow-[0px_5px_10px_rgba(0,0,0,0.1)]  p-2   cursor-pointer "
           onClick={() => {
             setDropdownType("beds");
             setShowDropdown(!showDropdown);
@@ -129,11 +162,11 @@ export default function PropertySearch({ setProperties, properties }) {
               <div className="flex items-center gap-4">
                 <span>{selectedBeds}</span>
               </div>
-              <FaAngleDown color="gray" size={20} />
+              <GoChevronDown color="gray" size={23} />
             </div>
           ) : (
-            <span className="text-gray-400 flex gap-4 w-full  justify-between items-center">
-              Beds <FaAngleDown size={20} color="gray" />
+            <span className="text-black flex gap-4 w-full  justify-between items-center">
+              Beds <GoChevronDown size={23} color="gray" />
             </span>
           )}
         </div>
@@ -154,34 +187,34 @@ export default function PropertySearch({ setProperties, properties }) {
 
         {/* Location */}
         <div
-          className="bg-white px-7 py-3 flex items-center gap-3 rounded-md shadow-[0px_5px_10px_rgba(0,0,0,0.1)] border-gray-300 p-2   cursor-pointer "
+          className="bg-white pl-5 py-3 flex items-center gap-3 rounded-md shadow-[0px_5px_10px_rgba(0,0,0,0.1)] border border-gray-100 p-2   cursor-pointer "
           onClick={() => {
-            setDropdownType("beds");
+            setDropdownType("location");
             setShowDropdown(!showDropdown);
           }}
         >
-          {selectedBeds ? (
+          {selectedLocation ? (
             <div className="flex items-center justify-between w-full space-x-2">
               <div className="flex items-center gap-4">
-                <span>{selectedBeds}</span>
+                <span>{selectedLocation}</span>
               </div>
-              <FaAngleDown color="gray" size={20} />
+              <GoChevronDown color="gray" size={23} />
             </div>
           ) : (
-            <span className="text-gray-400 gap-4  flex w-full  justify-between items-center">
-              Location <FaAngleDown size={20} color="gray" />
+            <span className="text-black gap-4  flex w-full  justify-between items-center">
+              Location <GoChevronDown size={23} color="gray" />
             </span>
           )}
         </div>
-        {showDropdown && dropdownType === "beds" && (
+        {showDropdown && dropdownType === "location" && (
           <div className="bg-white border border-gray-500/55 rounded-lg shadow-lg w-full absolute mt-1 z-10">
-            {beds.map((bed) => (
+            {location.map((item) => (
               <div
-                key={bed._id}
+                key={item._id}
                 className="flex p-2 cursor-pointer hover:bg-gray-100 rounded-lg items-center"
-                onClick={() => handleSelect(bed, "beds")}
+                onClick={() => handleSelect(item, "location")}
               >
-                <span className="ml-2">{bed.title}</span>
+                <span className="ml-2">{item.loc}</span>
               </div>
             ))}
           </div>
@@ -189,22 +222,22 @@ export default function PropertySearch({ setProperties, properties }) {
 
         {/* Price Range */}
         <div
-          className="bg-white  relative px-7 py-3 flex items-center gap-3 rounded-md shadow-[0px_5px_10px_rgba(0,0,0,0.1)] border-gray-300 p-2   cursor-pointer "
+          className="bg-white  relative pl-5 py-3 flex items-center gap-3 rounded-md shadow-[0px_5px_10px_rgba(0,0,0,0.1)] border border-gray-100 p-2   cursor-pointer "
           onClick={() => {
             setDropdownType("price");
             setShowDropdown(!showDropdown);
           }}
         >
-          {selectedBeds ? (
+          {selectedPrice ? (
             <div className="flex   w-40 items-center justify-between space-x-2">
               <div className="flex items-center gap-4">
-                <span>{selectedBeds}</span>
+                <span>{selectedPrice}</span>
               </div>
-              <FaAngleDown color="gray" size={20} />
+              <GoChevronDown color="gray" size={23} />
             </div>
           ) : (
-            <span className="text-gray-400 gap-4  flex w-full  justify-between items-center">
-              Price Range <FaAngleDown size={20} color="gray" />
+            <span className="text-black gap-4  flex w-full  justify-between items-center">
+              Price Range <GoChevronDown size={23} color="gray" />
             </span>
           )}
         </div>
@@ -226,7 +259,7 @@ export default function PropertySearch({ setProperties, properties }) {
 
         {/* Property Status */}
         <div
-          className="bg-white px-7 py-3 flex items-center gap-3 rounded-md shadow-[0px_5px_10px_rgba(0,0,0,0.1)] border-gray-300 p-2  cursor-pointer "
+          className="bg-white pl-5 py-3 flex items-center gap-3 rounded-md shadow-[0px_5px_10px_rgba(0,0,0,0.1)] border border-gray-100 p-2  cursor-pointer "
           onClick={() => {
             setDropdownType("propertyStatus");
             setShowDropdown(!showDropdown);
@@ -237,11 +270,11 @@ export default function PropertySearch({ setProperties, properties }) {
               <div className="flex items-center gap-4">
                 <span>{selectedPropertyStatus}</span>
               </div>
-              <FaAngleDown color="gray" size={20} />
+              <GoChevronDown color="gray" size={23} />
             </div>
           ) : (
-            <span className="text-gray-400 gap-4  flex w-full  justify-between items-center">
-              Property Status <FaAngleDown size={20} color="gray" />
+            <span className="text-black gap-4  flex w-full  justify-between items-center">
+              Property Status <GoChevronDown size={23} color="gray" />
             </span>
           )}
         </div>
@@ -262,7 +295,7 @@ export default function PropertySearch({ setProperties, properties }) {
 
         {/* Property Type */}
         <div
-          className="bg-white px-7 py-3 flex items-center gap-3 rounded-md shadow-[0px_5px_10px_rgba(0,0,0,0.1)] border-gray-300 p-2   cursor-pointer "
+          className="bg-white pl-5 py-3 flex items-center gap-3 rounded-md shadow-[0px_5px_10px_rgba(0,0,0,0.1)] border border-gray-100 p-2   cursor-pointer "
           onClick={() => {
             setDropdownType("propertyType");
             setShowDropdown(!showDropdown);
@@ -273,11 +306,11 @@ export default function PropertySearch({ setProperties, properties }) {
               <div className="flex items-center gap-4">
                 <span>{selectedPropertyType}</span>
               </div>
-              <FaAngleDown color="gray" size={20} />
+              <GoChevronDown color="gray" size={23} />
             </div>
           ) : (
-            <span className="text-gray-400 gap-4  flex w-full  justify-between items-center">
-              Property Type <FaAngleDown size={20} color="gray" />
+            <span className="text-black gap-4  flex w-full  justify-between items-center">
+              Property Type <GoChevronDown size={23} color="gray" />
             </span>
           )}
         </div>
@@ -294,6 +327,32 @@ export default function PropertySearch({ setProperties, properties }) {
             ))}
           </div>
         )}
+        <div
+          className={`${
+            map ? "flex" : "hidden"
+          }  bg-white shadow-[0px_5px_10px_rgba(0,0,0,0.1)] border border-gray-100 rounded-md`}
+        >
+          <a
+            className={`px-7 py-3 text-[16px]  flex items-center gap-3 transition-all cursor-pointer shadow-[0px_5px_10px_rgba(0,0,0,0.1)] rounded-l-md  ${
+              activeTab === "map"
+                ? "bg-[#204A7A] !text-white"
+                : "bg-white text-black"
+            }`}
+            onClick={() => setActiveTab("map")}
+          >
+            Map
+          </a>
+          <a
+            className={`px-7 py-3 text-[16px]  flex items-center gap-3 transition-all cursor-pointer rounded-r-md shadow-[0px_5px_10px_rgba(0,0,0,0.1)] ${
+              activeTab === "list"
+                ? "bg-[#204A7A] !text-white"
+                : "bg-white text-black"
+            }`}
+            onClick={() => setActiveTab("list")}
+          >
+            List
+          </a>
+        </div>
       </div>
     </section>
   );

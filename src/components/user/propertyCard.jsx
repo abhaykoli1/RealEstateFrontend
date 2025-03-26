@@ -82,13 +82,16 @@ const PropertyCard = ({
   const navigate = useNavigate();
 
   const handelPerticularProperty = (seoTitle) => {
-    const formattedTitle = seoTitle; // Replace all spaces with dashes
-    navigate(`/property/${formattedTitle}`);
+    // const formattedTitle = seoTitle; // Replace all spaces with dashes
+    navigate(`/property/${seoTitle}`);
   };
 
   // console.log("image : ", image[0]);
   return (
-    <div className="w-[95%] ml-2 bg-white shadow-lg  rounded-md overflow-hidden ">
+    <div
+      onClick={() => handelPerticularProperty(seo_title)}
+      className="w-[95%] ml-2 hover:scale-[101%] transition-all duration-500 bg-white shadow-lg  rounded-md overflow-hidden "
+    >
       <div className="relative">
         <img
           src={image[0].image}
@@ -109,7 +112,6 @@ const PropertyCard = ({
           Off Plan
         </span>
       </div>
-
       <div className="p-2.5">
         <h3 className="font-semibold text-[15px]">{title}</h3>
         <p className="text-[15px] text-black">{location}</p>
@@ -118,7 +120,6 @@ const PropertyCard = ({
           <div className="ProPrice text-black font-bold text-[18px] ">
             AED {price}
           </div>
-
           <div className="ProPriceBlocks flex items-center gap-2  text-[#1C3A5E]">
             <span className="flex items-center gap-1 border border-[#1C3A5E] px-2 h-6 rounded-md">
               <FaBed /> {beds}
@@ -140,10 +141,7 @@ const PropertyCard = ({
               <FaEnvelope className="text-gray-600" />
             </div>
           </div>
-          <div
-            onClick={() => handelPerticularProperty(seo_title)}
-            className="PropertyButton !bg-[#2F5FA7] text-white px-4 !py-1.5 rounded-lg"
-          >
+          <div className="PropertyButton !bg-[#2F5FA7] text-white px-4 !py-1.5 rounded-lg">
             Set a viewing
           </div>
         </div>

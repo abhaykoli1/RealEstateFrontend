@@ -20,8 +20,27 @@ import {
   FaCcDinersClub,
 } from "react-icons/fa";
 import smallLogo from "../../assets/smallLogo.png";
+import { useEffect, useState } from "react";
+import config from "../../common/config";
+import axios from "axios";
 
 export default function Footer() {
+  const [services, setServices] = useState([]);
+  // console.log("services : ===========", services);
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await axios.get(`${config.API_URL}/api/services`);
+        setServices(response.data);
+        // console.log(response.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchServices();
+  }, []);
+
   return (
     <section className="bg-[#2F5FA7] text-white pb-10 pt-7">
       <footer className="">
@@ -29,22 +48,20 @@ export default function Footer() {
 
         <div className="max-w-7xl mx-auto px-5">
           <div className=" grid lg:grid-cols-4 md:grid-cols-2 grid-cols-2 place-items-center gap-3 ">
-            {Array(4)
-              .fill("Service")
-              .map((text, index) => (
+            {services.length > 0 &&
+              services.map((item, index) => (
                 <div
                   key={index}
                   className="bg-[#2F5FA7] FooterServices w-full border-2 flex border-white rounded-lg items-center justify-start  p-2 gap-4 shadow-md"
                 >
                   <div>
                     <div className="flex items-center gap-2 mb-1">
-                      <FaTruckFast size={32} />{" "}
-                      <h4 className="font-semibold text-[16px]">{text}</h4>
+                      <img className="h-12" src={item.image} alt={item.title} />
+                      <h4 className="font-semibold text-[16px]">
+                        {item.title}
+                      </h4>
                     </div>
-                    <p className="text-[10px]">
-                      Trust us to connect your business to global markets with
-                      efficiency.
-                    </p>
+                    <p className="text-[10px]">{item.short_desc}</p>
                   </div>
                 </div>
               ))}
