@@ -121,12 +121,11 @@ const PerticularDevelopers = () => {
           community: property.communities || "No Community",
           property_type: property.property_type || "No Property Type",
           property_status: property.property_status || "No Property Status",
-          developer: property.developers || "No Developer",
+          developer: property?.developers || "No Developer",
           createdAt: property.createdAt || "No createdAt",
           location: property.location || "No location",
           price: property.price || "No Price",
           beds: property.beds || "No Beds",
-          developer: property.developers || "No Developer",
         }));
 
         setAllPropertiesData(formattedData);
@@ -157,7 +156,6 @@ const PerticularDevelopers = () => {
       location: property.location || "No location",
       price: property.price || "No Price",
       beds: property.beds || "No Beds",
-      developer: property.developers || "No Developer",
     }))
   );
 

@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import config from "../../common/config";
 import ImageUploader from "../../common/ImageUpload";
+import { FaTrash } from "react-icons/fa";
 
 function AddBlog() {
   const [formData, setFormData] = useState({
@@ -169,19 +170,37 @@ function AddBlog() {
           </select>
         </div>
 
+        {/* Images */}
         <div>
-          <label className="block text-sm font-medium">Profile Picture</label>
-          <ImageUploader onUpload={handleUploadImage} />
-        </div>
-        {formData.image && (
-          <div className="mt-4">
-            <img
-              src={formData.image}
-              alt="Blog Image"
-              className="w-24 h-24 rounded-md object-cover"
-            />
+          <label className="block text-sm font-medium">Profile Picture :</label>
+          <div className="flex gap-4">
+            <div className="w-full">
+              <ImageUploader onUpload={handleUploadImage} />
+            </div>
+
+            {/* Delete Button */}
+            <div
+              className="px-5 flex items-center border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+              onClick={() =>
+                setFormData((prev) => ({
+                  ...prev,
+                  image: null, // Instead of [], set to null to match data type
+                }))
+              }
+            >
+              <FaTrash size={20} />
+            </div>
           </div>
-        )}
+          {formData.image && (
+            <div className="mt-4">
+              <img
+                src={formData.image}
+                alt="Testimonial Image"
+                className="w-24 h-24 rounded-md object-cover"
+              />
+            </div>
+          )}
+        </div>
 
         {/* Submit Button */}
         <button

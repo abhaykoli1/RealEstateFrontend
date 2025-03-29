@@ -3,26 +3,20 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import config from "../../common/config";
 
-function EditPropertyType() {
+function EditPropertyStatus() {
   const { id } = useParams();
-
-  console.log(id);
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
 
   useEffect(() => {
     axios
-      .get(`${config.API_URL}/api/property-type/${id}`)
+      .get(`${config.API_URL}/api/property-status/${id}`)
       .then((response) => {
-        console.log(response);
-
-        const { title, description, image } = response.data.data;
+        const { title } = response.data.data;
         setTitle(title);
-        setDescription(description);
       })
       .catch((error) =>
-        alert("Error fetching property type: " + error.message)
+        alert("Error fetching property status: " + error.message)
       );
   }, [id]);
 
@@ -30,12 +24,11 @@ function EditPropertyType() {
     e.preventDefault();
     const formData = new FormData();
     formData.append("title", title);
-    formData.append("description", description);
 
     try {
-      await axios.put(`${config.API_URL}/api/property-type/${id}`, formData);
-      alert("Property type updated successfully!");
-      navigate("/admin/all-property-types");
+      await axios.put(`${config.API_URL}/api/property-status/${id}`, formData);
+      alert("Property status updated successfully!");
+      navigate("/admin/all-property-status");
     } catch (error) {
       alert("Error: " + (error.response?.data?.message || error.message));
     }
@@ -57,27 +50,15 @@ function EditPropertyType() {
           />
         </div>
 
-        <div>
-          <label className="text-gray-700 text-sm block font-medium">
-            Description:
-          </label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-            className="border border-gray-300 rounded-md w-full px-4 py-2"
-          ></textarea>
-        </div>
-
         <button
           type="submit"
           className="bg-blue-500 rounded-md text-white w-full px-4 py-2 hover:bg-blue-600"
         >
-          Update Property Type
+          Update Property Status
         </button>
       </form>
     </div>
   );
 }
 
-export default EditPropertyType;
+export default EditPropertyStatus;

@@ -93,26 +93,27 @@ const menuItems = [
 ];
 
 const Filter = ({ setFilterBar, filterBar }) => {
-  const isSmallScreen = useMediaQuery({ query: "(max-width: 1024px)" });
-  const islargeScreen = useMediaQuery({ query: "(max-width: 1023px)" });
-  //   function handleClose() {
-  //     {
-  //       isSmallScreen
-  //         ? setFilterBar(false)
-  //         : islargeScreen
-  //         ? setFilterBar(true)
-  //         : null;
-  //     }
-  //   }
-  //   useEffect(() => {
-  //     {
-  //       isSmallScreen
-  //         ? setFilterBar(false)
-  //         : islargeScreen
-  //         ? setFilterBar(false)
-  //         : null;
-  //     }
-  //   }, [isSmallScreen, islargeScreen]);
+  const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
+  const islargeScreen = useMediaQuery({ query: "(max-width: 767px)" });
+
+  function handleClose() {
+    {
+      isSmallScreen
+        ? setFilterBar(false)
+        : islargeScreen
+        ? setFilterBar(true)
+        : null;
+    }
+  }
+  useEffect(() => {
+    {
+      isSmallScreen
+        ? setFilterBar(false)
+        : islargeScreen
+        ? setFilterBar(false)
+        : null;
+    }
+  }, [isSmallScreen, islargeScreen]);
   const [openDropdown, setOpenDropdown] = useState(null);
   // const [openDropdown, setOpenDropdown] = useState(null);
   const [activeTab, setActiveTab] = useState("map");
@@ -123,18 +124,10 @@ const Filter = ({ setFilterBar, filterBar }) => {
   const navigate = useNavigate();
 
   const [filterBarVisible, setFilterBarVisible] = useState(true);
+  const [properties, setProperties] = useState([]);
+  const [updatedProperties, setUpdatedProperties] = useState([]);
 
-  // Use useEffect to hide the filterBar after 5 seconds
-  useEffect(() => {
-    if (filterBar) {
-      const timer = setTimeout(() => {
-        setFilterBar(false); // Hide the filter bar after 5 seconds
-      }, 5000);
-
-      // Cleanup the timer when the component unmounts or when state changes
-      return () => clearTimeout(timer);
-    }
-  }, [filterBar]); // Dependency array ensures effect runs only when filterBar changes
+  const [showDropdown, setShowDropdown] = useState(false);
 
   return (
     <div
@@ -150,34 +143,17 @@ const Filter = ({ setFilterBar, filterBar }) => {
           </div>
 
           <div className="flex flex-wrap gap-2 my-2 ">
-            <PropertySearch />
-
-            {/* <a className="bg-white   px-12 py-1.5 text-[12px] items-center gap-3 rounded-md shadow-[0px_5px_10px_rgba(0,0,0,0.1)]">
-              Commercial
-            </a>
-            {menuItems.map((item, index) => (
-              <div key={index} className="relative">
-                <a
-                  onClick={() => toggleDropdown(index)}
-                  className="bg-white px-[18.5px] py-1.5 !w-full flex items-center text-[12px] gap-3 rounded-md shadow-[0px_5px_10px_rgba(0,0,0,0.1)]"
-                >
-                  {item.icon} {item.label} <FaChevronDown />
-                </a>
-                {openDropdown === index && (
-                  <div className="absolute mt-2 bg-white shadow-md rounded-md w- z-10">
-                    {item.options.map((option, i) => (
-                      <div
-                        key={i}
-                        className="px-4 py-2 hover:bg-gray-100  text-[12px] cursor-pointer"
-                        onClick={() => setOpenDropdown(null)}
-                      >
-                        {option}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))} */}
+            <PropertySearch
+              setShowDropdown={setShowDropdown}
+              showDropdown={showDropdown}
+              setActiveTab={setActiveTab}
+              activeTab={activeTab}
+              setProperties={setProperties}
+              properties={properties}
+              map={true}
+              setUpdatedProperties={setUpdatedProperties}
+              updatedProperties={updatedProperties}
+            />
           </div>
 
           {/* Price Range */}

@@ -42,7 +42,6 @@ const PropertyCard = ({
 }) => {
   const [status, setStatus] = useState(null);
   const [pType, setPType] = useState(null);
-  // const { seo_title } = useParams();
 
   useEffect(() => {
     const fetchPropertyStatus = async () => {
@@ -82,11 +81,8 @@ const PropertyCard = ({
   const navigate = useNavigate();
 
   const handelPerticularProperty = (seoTitle) => {
-    // const formattedTitle = seoTitle; // Replace all spaces with dashes
     navigate(`/property/${seoTitle}`);
   };
-
-  // console.log("image : ", image[0]);
   return (
     <div
       onClick={() => handelPerticularProperty(seo_title)}

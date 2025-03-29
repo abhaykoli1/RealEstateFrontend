@@ -1,39 +1,61 @@
-import { Menu, Plus } from "lucide-react";
+import { LogOut, Menu, Plus } from "lucide-react";
 import React, { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
 
 const AdminHeader = ({ setSidebar, sidebar }) => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const routeMap = {
     "/admin": "Admin Dashboard",
-    "/admin/add-property-type": "Add Property Type",
+    "/admin/add-banner": "Banner Images",
     "/admin/add-property": "Add Property",
+    "/admin/all-properties": "All Properties",
     "/admin/add-property-status": "Add Property Status",
-    "/admin/add-consultant": "Consultant",
-    "/admin/users": "Users List",
-    "/admin/Rides": "Admin Rides",
-    "/admin/Bookings": "Admin Bookings",
-    "/admin/addReviews": "Add Reviews",
+    "/admin/all-property-status": "All Property Status",
+    "/admin/add-consultant": "Add Consultant",
+    "/admin/all-consultant": "All Consultant",
+    "/admin/add-developer": "Add Developer",
+    "/admin/all-developers": "All Developer",
+    "/admin/add-community": "Add Community",
+    "/admin/all-communities": "All Community",
     "/admin/add-blog": "Add Blogs",
+    "/admin/all-blogs": "All Blogs",
+    "/admin/add-blog-category": "Add Blog Category",
+    "/admin/all-blog-categories": "All Blog Categories",
+    "/admin/add-testimonial": "Add Testimonial",
+    "/admin/all-testimonials": "All Testimonial",
     "/admin/about-us": "About Us",
-    "/admin/blog-category": "Blog Category",
-    "/admin/testimonial": "Testimonial",
     "/admin/why-choose-us": "Why Choose Us",
-    "/admin/interests": "Interest Options",
-    "/admin/add-banner": "Add Banner Images",
-    "/admin/add-banner": "Add Admin",
-    "/admin/add-faqs": "Add FAQ`S",
+    "/admin/add-interest": "Interest Options",
+    "/admin/all-interests": "All Interest Options",
+    "/admin/add-property-type": "Add Property Type",
+    "/admin/all-property-types": "All Property Types",
+    "/admin/add-faq": "Add FAQ`S",
+    "/admin/all-faqs": "All FAQ`S",
   };
-
-  const routeName = routeMap[location.pathname] || "Unknown Route";
-  const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem("isAuthenticated");
     navigate("/admin/login");
   };
+
+  // Function to get the correct route name
+  const getRouteName = (pathname) => {
+    if (routeMap[pathname]) return routeMap[pathname]; // Exact match
+
+    // Handle dynamic routes
+    for (const route in routeMap) {
+      if (route.includes(":")) {
+        const routeRegex = new RegExp(`^${route.replace(":id", "\\d+")}$`); // Match dynamic route
+        if (routeRegex.test(pathname)) return routeMap[route];
+      }
+    }
+    return "Edit";
+  };
+
+  const routeName = getRouteName(location.pathname);
 
   return (
     <header
@@ -47,7 +69,7 @@ const AdminHeader = ({ setSidebar, sidebar }) => {
           className="h-9  w-10 border rounded-md border-white p-1 cursor-pointer"
         />
         <label
-          className={`lg:text-2xl text-xl lg:pl-[190px] text-white font-bold`}
+          className={`lg:text-2xl md:text-2xl text-md lg:pl-[190px] text-white font-bold`}
         >
           {routeName}
         </label>
@@ -55,9 +77,9 @@ const AdminHeader = ({ setSidebar, sidebar }) => {
       <div className="flex gap-3 items-center">
         <button
           onClick={handleLogout}
-          className="  px-4 py-2 !text-[#2f5fa7] !font-semibold  !bg-white !rounded-[5px] hover:scale-[102%] transition"
+          className=" w-full !p-0 !text- !font-semibold  !bg-  !rounded-[5px] hover:scale-[102%] transition"
         >
-          LOGOUT
+          <LogOut />
         </button>
       </div>
     </header>

@@ -6,6 +6,7 @@ import ImageUploader from "../../common/ImageUpload";
 import { FaAngleDown } from "react-icons/fa6";
 import SunEditor from "suneditor-react";
 import "suneditor/dist/css/suneditor.min.css";
+import { FaTrash } from "react-icons/fa";
 
 export default function PropertyForm() {
   const [formData, setFormData] = useState({
@@ -223,7 +224,10 @@ export default function PropertyForm() {
   const handleUploadImages = (uploadedImages) => {
     setFormData((prev) => ({
       ...prev,
-      image: [...prev.image, ...uploadedImages.map((url) => ({ image: url }))],
+      image: [
+        ...(Array.isArray(prev.image) ? prev.image : []),
+        ...uploadedImages.map((url) => ({ image: url })),
+      ],
     }));
   };
 
@@ -243,6 +247,13 @@ export default function PropertyForm() {
   // upload a image
   const handleUploadImage = (uploadedFile) => {
     setFormData({ ...formData, old_permit_image: uploadedFile[0] });
+  };
+
+  const deleteImage = (index) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      image: prevFormData.image.filter((_, i) => i !== index),
+    }));
   };
 
   return (
@@ -641,9 +652,28 @@ export default function PropertyForm() {
           placeholder="Dld Permit Description"
         />
       </div>
+
+      {/* QR */}
       <div>
         <label className="block text-sm font-medium">Dld QR</label>
-        <ImageUploader onUpload={handleUploadImage} />
+        <div className="flex gap-4">
+          <div className="w-full">
+            <ImageUploader onUpload={handleUploadImage} />
+          </div>
+
+          {/* Delete Button */}
+          <div
+            className="px-5 flex items-center border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+            onClick={() =>
+              setFormData((prev) => ({
+                ...prev,
+                old_permit_image: null, // Instead of [], set to null to match data type
+              }))
+            }
+          >
+            <FaTrash size={20} />
+          </div>
+        </div>
       </div>
       {formData.old_permit_image && (
         <div className="mt-4">
@@ -660,10 +690,22 @@ export default function PropertyForm() {
         <label className="text-sm font-medium text-gray-700 mb-1">
           Features:
         </label>
-        <ImageUploader
-          onUpload={(urls) => handleUploadFeatures(urls, "features")}
-        />
-        {formData.features?.map((feature, index) => (
+
+        <div className="flex gap-4">
+          <div className="w-full">
+            <ImageUploader
+              onUpload={(urls) => handleUploadFeatures(urls, "features")}
+            />
+          </div>
+
+          <div
+            className="px-5 flex items-center  border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onClick={() => setFormData((prev) => ({ ...prev, features: [] }))}
+          >
+            <FaTrash size={20} />
+          </div>
+        </div>
+        {formData?.features?.map((feature, index) => (
           <div key={index} className="flex items-center space-x-2 mt-2">
             <img
               src={feature.features_img}
@@ -677,6 +719,19 @@ export default function PropertyForm() {
               onChange={(e) => handleTitleChange(e, index, "features")}
               className="border border-gray-300 rounded-md px-2 py-1 w-full"
             />
+
+            {/* Delete Button */}
+            <div
+              className="border border-gray-300 rounded-md px-2 py-1 "
+              onClick={() =>
+                setFormData((prev) => ({
+                  ...prev,
+                  features: prev.features.filter((_, i) => i !== index),
+                }))
+              }
+            >
+              <FaTrash size={20} />
+            </div>
           </div>
         ))}
       </div>
@@ -686,9 +741,21 @@ export default function PropertyForm() {
         <label className="text-sm font-medium text-gray-700 mb-1">
           Amenities:
         </label>
-        <ImageUploader
-          onUpload={(urls) => handleUploadComplete(urls, "amenities")}
-        />
+        <div className="flex gap-4">
+          <div className="w-full">
+            <ImageUploader
+              onUpload={(urls) => handleUploadComplete(urls, "amenities")}
+            />
+          </div>
+
+          <div
+            className="px-5 flex items-center  border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onClick={() => setFormData((prev) => ({ ...prev, amenities: [] }))}
+          >
+            <FaTrash size={20} />
+          </div>
+        </div>
+
         {formData.amenities?.map((amenity, index) => (
           <div key={index} className="flex items-center space-x-2 mt-2">
             <img
@@ -703,6 +770,19 @@ export default function PropertyForm() {
               onChange={(e) => handleTitleChange(e, index, "amenities")}
               className="border border-gray-300 rounded-md px-2 py-1 w-full"
             />
+
+            {/* Delete Button */}
+            <div
+              className="border border-gray-300 rounded-md px-2 py-1 "
+              onClick={() =>
+                setFormData((prev) => ({
+                  ...prev,
+                  amenities: prev.amenities.filter((_, i) => i !== index),
+                }))
+              }
+            >
+              <FaTrash size={20} />
+            </div>
           </div>
         ))}
       </div>
@@ -712,9 +792,21 @@ export default function PropertyForm() {
         <label className="text-sm font-medium text-gray-700 mb-1">
           Nearby Places:
         </label>
-        <ImageUploader
-          onUpload={(urls) => handleUploadComplete(urls, "near_by")}
-        />
+
+        <div className="flex gap-4">
+          <div className="w-full">
+            <ImageUploader
+              onUpload={(urls) => handleUploadComplete(urls, "near_by")}
+            />
+          </div>
+
+          <div
+            className="px-5 flex items-center  border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onClick={() => setFormData((prev) => ({ ...prev, near_by: [] }))}
+          >
+            <FaTrash size={20} />
+          </div>
+        </div>
         {formData.near_by?.map((place, index) => (
           <div key={index} className="flex items-center space-x-2 mt-2">
             <img
@@ -736,6 +828,19 @@ export default function PropertyForm() {
               onChange={(e) => handleSubTitleChange(e, index, "near_by")}
               className="border border-gray-300 rounded-md px-2 py-1 w-full"
             />
+
+            {/* Delete Button */}
+            <div
+              className="border  border-gray-300 rounded-md px-2 py-1 "
+              onClick={() =>
+                setFormData((prev) => ({
+                  ...prev,
+                  near_by: prev.near_by.filter((_, i) => i !== index),
+                }))
+              }
+            >
+              <FaTrash size={20} />
+            </div>
           </div>
         ))}
       </div>
@@ -749,18 +854,37 @@ export default function PropertyForm() {
           Image:
         </label>
 
-        <ImageUploader onUpload={handleUploadImages} />
+        <div className="flex gap-4">
+          <div className="w-full">
+            <ImageUploader onUpload={handleUploadImages} />
+          </div>
+
+          <div
+            className="px-5 flex items-center  border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onClick={() => setFormData((prev) => ({ ...prev, image: [] }))}
+          >
+            <FaTrash size={20} />
+          </div>
+        </div>
 
         {/* Display Uploaded Images */}
-        <div className="flex flex-wrap gap-3 mt-2">
-          {formData.image.map((img, index) => (
-            <img
-              key={index}
-              src={img.image}
-              alt={`Uploaded ${index}`}
-              className={` w-20 h-20  rounded-md object-cover m-1`}
-            />
-          ))}
+        <div className="flex flex-wrap gap-5 mt-5">
+          {formData.image &&
+            formData.image.map((img, index) => (
+              <div key={index} className="relative w-24 h-24">
+                <img
+                  src={img.image}
+                  alt={`Uploaded ${index}`}
+                  className="w-20 h-20 rounded-md object-cover m-1"
+                />
+                <div
+                  onClick={() => deleteImage(index)}
+                  className="absolute -top-3 -right-3 bg-[rgba(0,0,0,0.5)] text-white p-2 rounded-full shadow-md hover:bg-red-600 transition duration-300"
+                >
+                  <FaTrash size={14} className="text-white" />
+                </div>
+              </div>
+            ))}
         </div>
       </div>
 

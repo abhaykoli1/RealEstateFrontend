@@ -3,8 +3,11 @@ import axios from "axios";
 import config from "../../common/config";
 import ImageUploader from "../../common/ImageUpload";
 import { FaTrash } from "react-icons/fa";
+import { useParams, useNavigate } from "react-router-dom";
 
-const AddCommunity = () => {
+const EditCommunity = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: "",
     sub_title: "",
@@ -14,18 +17,14 @@ const AddCommunity = () => {
     highlights: [],
     description: "",
   });
-
-  console.log(formData);
   const [loading, setLoading] = useState(false);
-  const [communities, setCommunities] = useState([]);
-  console.log(communities);
 
   useEffect(() => {
     axios
-      .get(`${config.API_URL}/api/communities`)
-      .then((response) => setCommunities(response.data.data))
+      .get(`${config.API_URL}/api/communities/${id}`)
+      .then((response) => setFormData(response.data.data))
       .catch((error) => console.log(error.message));
-  }, []);
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -45,13 +44,12 @@ const AddCommunity = () => {
       ],
     }));
   };
-  //    Animities
+
   const handleUploadComplete = (uploadedUrls, field) => {
     const newEntries = uploadedUrls.map((url) => ({
-      title: field === "amenities" ? "" : "",
+      title: "",
       [`${field}_img`]: url,
     }));
-
     setFormData((prev) => ({
       ...prev,
       [field]: prev[field] ? [...prev[field], ...newEntries] : [...newEntries],
@@ -61,35 +59,19 @@ const AddCommunity = () => {
   const handleTitleChange = (e, index, field) => {
     const updatedItems = [...formData[field]];
     updatedItems[index].title = e.target.value;
-
-    setFormData((prev) => ({
-      ...prev,
-      [field]: updatedItems,
-    }));
+    setFormData((prev) => ({ ...prev, [field]: updatedItems }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     try {
-      const response = await axios.post(
-        `${config.API_URL}/api/communities`,
-        formData
-      );
-      alert("Community added successfully!");
-      setFormData({
-        title: "",
-        sub_title: "",
-        logo_image: null,
-        image: [],
-        amenities: [],
-        highlights: [],
-        description: "",
-      });
+      await axios.put(`${config.API_URL}/api/communities/${id}`, formData);
+      alert("Community updated successfully!");
+      navigate("/admin/all-communities");
     } catch (error) {
       alert(
-        "Failed to add community: " +
+        "Failed to update community: " +
           (error.response?.data?.message || error.message)
       );
     } finally {
@@ -323,37 +305,16 @@ const AddCommunity = () => {
           </div>
         </div>
 
-        {/* <div className="flex flex-col">
-          <label
-            htmlFor="image"
-            className="text-sm font-medium text-gray-700 mb-1"
-          >
-            Images :
-          </label>
-
-          <ImageUploader onUpload={handleUploadImages} />
-
-          <div className="flex flex-wrap gap-3 mt-2">
-            {formData.image.map((img, index) => (
-              <img
-                key={index}
-                src={img.image}
-                alt={`Uploaded ${index}`}
-                className={` w-20 h-20  rounded-md object-cover m-1`}
-              />
-            ))}
-          </div>
-        </div> */}
         <button
           type="submit"
           disabled={loading}
           className=" text-white py-2 rounded-md hover:bg-blue-700 disabled:bg-gray-400"
         >
-          {loading ? "Adding..." : "Add Community"}
+          {loading ? "Updating..." : "Update Community"}
         </button>
       </form>
     </div>
   );
 };
 
-export default AddCommunity;
+export default EditCommunity;

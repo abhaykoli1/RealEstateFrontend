@@ -8,7 +8,7 @@ const ImageUploader = ({ onUpload }) => {
   const handleFileChange = async (event) => {
     const files = Array.from(event.target.files);
     if (files.length === 0) return;
-
+    
     setUploading(true);
     const uploadPromises = files.map(async (file) => {
       const formData = new FormData();

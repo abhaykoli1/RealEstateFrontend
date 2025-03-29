@@ -22,6 +22,9 @@ function AddPropertyType() {
     try {
       await axios.post(`${config.API_URL}/api/property-type`, formData);
       alert("Property type added successfully!");
+      setImage(null);
+      setTitle("");
+      setDescription("");
       // navigate("/admin/all-property-types");
     } catch (error) {
       alert("Error: " + (error.response?.data?.message || error.message));
@@ -64,18 +67,6 @@ function AddPropertyType() {
             className="border border-gray-300 rounded-md w-full px-4 py-2"
           ></textarea>
         </div>
-        {/* <div>
-          <label className="text-gray-700 text-sm block font-medium">
-            Description:
-          </label>
-          <SunEditor
-            setContents={description}
-            onChange={(e) => setDescription(e.target.value)}
-            setOptions={{
-              buttonList: [["bold", "italic", "underline", "list"]],
-            }}
-          />
-        </div> */}
 
         <button type="submit" className="">
           Add Property Type
@@ -86,3 +77,17 @@ function AddPropertyType() {
 }
 
 export default AddPropertyType;
+{
+  /* <div>
+  <label className="text-gray-700 text-sm block font-medium">
+    Description:
+  </label>
+  <SunEditor
+    setContents={description}
+    onChange={(e) => setDescription(e.target.value)}
+    setOptions={{
+      buttonList: [["bold", "italic", "underline", "list"]],
+    }}
+  />
+</div> */
+}

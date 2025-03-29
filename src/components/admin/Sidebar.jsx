@@ -5,105 +5,118 @@ import {
   ChevronLeftIcon,
   Contact,
   LayoutDashboard,
+  LogOut,
   User,
 } from "lucide-react";
 import React, { useEffect } from "react";
 import { useMediaQuery } from "react-responsive";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
+
+import {
+  FaTachometerAlt,
+  FaImage,
+  FaHeart,
+  FaInfoCircle,
+  FaCheckCircle,
+  FaListAlt,
+  FaBlog,
+  FaQuestionCircle,
+  FaQuoteLeft,
+  FaBuilding,
+  FaUserTie,
+  FaCity,
+  FaShapes,
+  FaClipboardCheck,
+} from "react-icons/fa";
+
 // Add Property ,
 const adminSidebarMenuItems = [
   {
     id: "dashboard",
     label: "Dashboard",
     path: "/admin",
-    // icon: <LayoutDashboard className="text-slate-700" />,
-  },
-
-  {
-    id: "Banner Images",
-    label: "Banner Images",
-    path: "/admin/add-banner",
+    icon: <FaTachometerAlt />,
   },
 
   {
     id: "interests",
     label: "Interests",
-    path: "/admin/interests",
-    // icon can be added here if available
+    path: "/admin/add-interest",
+    icon: <FaHeart />,
   },
+
   {
     id: "blog-category",
     label: "Blog Category",
-    path: "/admin/blog-category",
-  },
-  {
-    id: "about-us",
-    label: "About Us",
-    path: "/admin/about-us",
-  },
-  {
-    id: "why-choose-us",
-    label: "Why Choose Us",
-    path: "/admin/why-choose-us",
-  },
-  {
-    id: "add-faqs",
-    label: "Add Faqs",
-    path: "/admin/add-faqs",
-  },
-  {
-    id: "testimonial",
-    label: "Testimonial",
-    path: "/admin/testimonial",
+    path: "/admin/add-blog-category",
+    icon: <FaListAlt />,
   },
   {
     id: "add-blog",
     label: "Blog",
     path: "/admin/add-blog",
+    icon: <FaBlog />,
+  },
+  {
+    id: "add-faqs",
+    label: "Faqs",
+    path: "/admin/add-faq",
+    icon: <FaQuestionCircle />,
+  },
+  {
+    id: "testimonial",
+    label: "Testimonial",
+    path: "/admin/add-testimonial",
+    icon: <FaQuoteLeft />,
   },
   {
     id: "property",
     label: "Property",
     path: "/admin/add-property",
+    icon: <FaBuilding />,
   },
   {
     id: "add-consultant",
     label: "Consultant",
     path: "/admin/add-consultant",
-  },
-  {
-    id: "add-property-type",
-    label: "Property Type",
-    path: "/admin/add-property-type",
+    icon: <FaUserTie />,
   },
   {
     id: "add-developer",
     label: "Developer",
     path: "/admin/add-developer",
+    icon: <FaCity />,
   },
   {
     id: "add-community",
     label: "Community",
     path: "/admin/add-community",
+    icon: <FaCity />,
   },
-  // {
-  //   id: "all-property-types",
-  //   label: "All Property Type",
-  //   path: "/admin/all-property-types",
-  // },
+  {
+    id: "add-property-type",
+    label: "Property Type",
+    path: "/admin/add-property-type",
+    icon: <FaShapes />,
+  },
   {
     id: "add-property-status",
     label: "Property Status",
     path: "/admin/add-property-status",
+    icon: <FaClipboardCheck />,
   },
 ];
+const handleLogout = () => {
+  localStorage.removeItem("isAuthenticated");
+  navigate("/admin/login");
+};
 
 function MenuItems({ setSidebar, handleClose }) {
   const navigate = useNavigate();
 
   return (
-    <nav className="flex flex-col no-scrollbar gap- pt-[35px] shadow-2xl h-screen mr-[2px]">
+    <nav className="flex flex-col  pt-10  h-full  border- border-gray">
       {adminSidebarMenuItems.map((menuItem) => (
         <a
           key={menuItem.id}
@@ -111,9 +124,9 @@ function MenuItems({ setSidebar, handleClose }) {
             navigate(menuItem.path);
             handleClose();
           }}
-          className="flex  no-scrollbar hover:bg-[#2f5fa71d] text-xl cursor-pointer gap-4 hover:!text-[#2f5fa7]  items-center px-5 py-2.5"
+          className="flex overflow-hidden hover:bg-[#2f5fa71d] text-xl cursor-pointer gap-4 hover:!text-[#2f5fa7]  items-center px-5 py-2.5"
         >
-          {/* {menuItem.icon} */}
+          <span>{menuItem.icon}</span>
           <span>{menuItem.label}</span>
         </a>
       ))}
@@ -146,17 +159,11 @@ const Sidebar = ({ setSidebar, sidebar }) => {
   const navigate = useNavigate();
   return (
     <div
-      className={` h-full z-0 w-60 overflow-y-auto bg-[#fff] text-white  fixed duration-500 transition-all  
+      className={` h-full z-0 w-60 overflow-y-auto scrollbar-hide bg-[#fff] text-white  fixed duration-500 transition-all  
       ${sidebar ? "" : "-translate-x-60"}`}
     >
-      <aside className="flex flex-col bg-transparent w-full overflow-y-scroll pt-4">
+      <aside className="flex flex-col bg-transparent w-full scrollbar-hide overflow-y-scroll pt-4">
         <div className="flex border-[#d0d0d0] border-b justify-center  cursor-pointer gap-2 items-center lg:pb-[19px] pb-[9px] px-4">
-          {/* <div className="flex flex-col text-center items-center">
-            <ChartNoAxesCombined size={26} />
-            <h2 className="text-[10px] text-slate-700 font-extrabold line-clamp-6">
-              Admin
-            </h2>
-          </div> */}
           <div className="flex bg-[#2f5fa7] border-b border-gray-300  justify-center w-60 fixed items-center leading-3 line-clamp-1 py-[7px] top-0 z-30">
             {/* DNS */}
             {sidebar ? (
@@ -172,7 +179,7 @@ const Sidebar = ({ setSidebar, sidebar }) => {
           </div>
         </div>
 
-        <div className="mt-3 overflow-y-scroll no-scrollbar h-screen shadow-2xl border- border-gray-300">
+        <div className="mt-3 overflow-y-scroll scrollbar-hide  h-full pb-20  shadow-2x border-r border-gray-300">
           <MenuItems setSidebar={setSidebar} handleClose={handleClose} />
         </div>
       </aside>

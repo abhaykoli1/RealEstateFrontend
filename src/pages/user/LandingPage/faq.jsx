@@ -62,7 +62,7 @@ export default function FAQWithForm() {
         {/* Left Side - FAQ Accordion */}
         <div className="w-full lg:w-full">
           <h2 className="lg:text-[32px] md:text-[32px] text-[25px] font-bold text-[#1A2948] mb-2">
-            Why choose haus & haus
+            Why Choose DNS
           </h2>
           <span className="border-b-[3px]  border-[#A9B9D6] flex w-[150px] mb-6"></span>
           <div>
@@ -93,7 +93,6 @@ export default function FAQWithForm() {
         {/* Right Side - Contact Form */}
         <div className="w-full lg:w-1/2  shadow-lg">
           <QueryForm />
-          
         </div>
       </div>
     </div>

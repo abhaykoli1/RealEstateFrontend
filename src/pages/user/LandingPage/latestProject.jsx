@@ -37,7 +37,6 @@ export default function LatestProjects({ allPropertiesData }) {
       location: property.location || "No location",
       price: property.price || "No Price",
       beds: property.beds || "No Beds",
-      developer: property.developers || "No Developer",
     }))
   );
 

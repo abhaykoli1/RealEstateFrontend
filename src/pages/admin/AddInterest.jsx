@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ImageUploader from "../../common/ImageUpload";
 import config from "../../common/config";
 import axios from "axios";
+import { FaTrash } from "react-icons/fa";
 
 function Interests() {
   const [formData, setFormData] = useState({
@@ -48,7 +49,7 @@ function Interests() {
             htmlFor="title"
             className="block text-sm font-medium text-gray-700"
           >
-            Title:
+            Title :
           </label>
           <input
             type="text"
@@ -64,20 +65,35 @@ function Interests() {
         {/* Image Upload Field */}
 
         <div>
-          <label htmlFor="image" className="block text-sm font-medium">
-            Testimonial Image:
-          </label>
-          <ImageUploader onUpload={handleUploadImage} />
-        </div>
-        {formData.image && (
-          <div className="mt-4">
-            <img
-              src={formData.image}
-              alt="Testimonial Image"
-              className="w-24 h-24 rounded-md object-cover"
-            />
+          <label className="block text-sm font-medium">Image :</label>
+          <div className="flex gap-4">
+            <div className="w-full">
+              <ImageUploader onUpload={handleUploadImage} />
+            </div>
+
+            {/* Delete Button */}
+            <div
+              className="px-5 flex items-center border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+              onClick={() =>
+                setFormData((prev) => ({
+                  ...prev,
+                  image: null, // Instead of [], set to null to match data type
+                }))
+              }
+            >
+              <FaTrash size={20} />
+            </div>
           </div>
-        )}
+          {formData.image && (
+            <div className="mt-4">
+              <img
+                src={formData.image}
+                alt="Testimonial Image"
+                className="w-24 h-24 rounded-md object-cover"
+              />
+            </div>
+          )}
+        </div>
 
         {/* Submit Button */}
         <button

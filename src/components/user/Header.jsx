@@ -52,10 +52,30 @@ const Header = ({ setSidebar, sidebar, setFilterBar, filterBar }) => {
               </ul>
               <div className="xl:flex hidden justify-end  ">
                 <select className="!bg-white border border-[#A9B9D6] h-[28px] w-[100px] rounded-md py- text-black font-bold px-">
-                  <option value="AED">🇪🇺 AED</option>
+                  <option value="AED">🇦🇪 AED</option>
                   <option value="USD">🇺🇸 USD</option>
                   <option value="INR">🇮🇳 INR</option>
                   <option value="EUR">🇪🇺 EUR</option>
+                  <option value="GBP">🇬🇧 GBP</option>
+                  <option value="CAD">🇨🇦 CAD</option>
+                  <option value="AUD">🇦🇺 AUD</option>
+                  <option value="SGD">🇸🇬 SGD</option>
+                  <option value="JPY">🇯🇵 JPY</option>
+                  <option value="CNY">🇨🇳 CNY</option>
+                  <option value="CHF">🇨🇭 CHF</option>
+                  <option value="SEK">🇸🇪 SEK</option>
+                  <option value="NZD">🇳🇿 NZD</option>
+                  <option value="MXN">🇲🇽 MXN</option>
+                  <option value="HKD">🇭🇰 HKD</option>
+                  <option value="ZAR">🇿🇦 ZAR</option>
+                  <option value="THB">🇹🇭 THB</option>
+                  <option value="KRW">🇰🇷 KRW</option>
+                  <option value="BRL">🇧🇷 BRL</option>
+                  <option value="RUB">🇷🇺 RUB</option>
+                  <option value="MYR">🇲🇾 MYR</option>
+                  <option value="IDR">🇮🇩 IDR</option>
+                  <option value="PHP">🇵🇭 PHP</option>
+                  <option value="TRY">🇹🇷 TRY</option>
                 </select>
               </div>
             </div>

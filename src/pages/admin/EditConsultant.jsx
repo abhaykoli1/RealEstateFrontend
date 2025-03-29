@@ -1,110 +1,122 @@
-import { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import config from "../../common/config";
 import ImageUploader from "../../common/ImageUpload";
 import { FaTrash } from "react-icons/fa";
 
-const AddConsultant = () => {
+function EditConsultant() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     email: "",
     country_code: "",
     phone: "",
-    // whatsappNumber: "",
-    profile_pic: "", // Change from empty string to null
+    profile_pic: null,
   });
-
-  const [loading, setLoading] = useState(false);
-  const [consultants, setConsultants] = useState([]);
 
   useEffect(() => {
     axios
-      .get(`${config.API_URL}/api/consultant`)
-      .then((response) => setConsultants(response.data.data))
-      .catch((error) => console.log(error.message));
-  }, []);
+      .get(`${config.API_URL}/api/consultant/${id}`)
+      .then((response) => {
+        const { name, description, email, country_code, phone, profile_pic } =
+          response.data.data;
+        setFormData({
+          name,
+          description,
+          email,
+          country_code,
+          phone,
+          profile_pic,
+        });
+      })
+      .catch((error) =>
+        alert("Error fetching consultant details: " + error.message)
+      );
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleFileChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      profile_pic: e.target.files[0], // Handling file upload
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const data = new FormData();
+    for (const key in formData) {
+      data.append(key, formData[key]);
+    }
+
+    try {
+      await axios.put(`${config.API_URL}/api/consultant/${id}`, data);
+      alert("Consultant updated successfully!");
+      navigate("/admin/all-consultant");
+    } catch (error) {
+      alert("Error: " + (error.response?.data?.message || error.message));
+    }
   };
 
   const handleUploadImage = (uploadedFile) => {
     setFormData({ ...formData, profile_pic: uploadedFile[0] });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      const response = await axios.post(
-        `${config.API_URL}/api/consultant`,
-        formData,
-        {
-          // headers: {
-          //   "Content-Type": "multipart/form-data",
-          // },
-        }
-      );
-      alert("Consultant added successfully!");
-      setFormData({
-        name: "",
-        description: "",
-        email: "",
-        country_code: "",
-        phone: "",
-        // whatsappNumber: "",
-        profile_pic: null,
-      });
-    } catch (error) {
-      alert(
-        "Failed to add consultant: " +
-          (error.response?.data?.message || error.message)
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
-    <div className="mx-auto p-3 rounded-lg w-full">
-      {/* <h2 className="text-xl font-bold mb-4">Add Consultant</h2> */}
+    <div className="p-3 w-full mx-auto">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium">Name:</label>
+          <label className="text-gray-700 text-sm block font-medium">
+            Name:
+          </label>
           <input
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
             required
-            className="w-full mt-1 border !border-gray-300 rounded-md  px-4 py-2"
+            className="border border-gray-300 rounded-md w-full px-4 py-2"
           />
         </div>
+
         <div>
-          <label className="block text-sm font-medium">Description:</label>
+          <label className="text-gray-700 text-sm block font-medium">
+            Description:
+          </label>
           <textarea
             name="description"
             value={formData.description}
             onChange={handleChange}
             required
-            rows="4"
-            className="w-full mt-1 p-2 border border-gray-300 rounded-md  px-4 py-2"
+            className="border border-gray-300 rounded-md w-full px-4 py-2"
           ></textarea>
         </div>
+
         <div>
-          <label className="block text-sm font-medium">Email:</label>
+          <label className="text-gray-700 text-sm block font-medium">
+            Email:
+          </label>
           <input
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
             required
-            className="w-full mt-1 p-2 border border-gray-300 rounded-md  px-4 py-2"
+            className="border border-gray-300 rounded-md w-full px-4 py-2"
           />
         </div>
+
         <div className="flex gap-5 ">
           <div className="!max-w-52">
             <label className="block text-sm font-medium">Country Code:</label>
@@ -274,6 +286,20 @@ const AddConsultant = () => {
           </div>
         </div>
 
+        <div>
+          <label className="text-gray-700 text-sm block font-medium">
+            Phone:
+          </label>
+          <input
+            type="text"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            required
+            className="border border-gray-300 rounded-md w-full px-4 py-2"
+          />
+        </div>
+
         {/* Images */}
         <div>
           <label className="block text-sm font-medium">Profile Picture :</label>
@@ -308,14 +334,13 @@ const AddConsultant = () => {
 
         <button
           type="submit"
-          disabled={loading}
-          className=" text-white py-2 rounded-md hover:bg-blue-700 disabled:bg-gray-400"
+          className="bg-blue-500 rounded-md text-white w-full px-4 py-2 hover:bg-blue-600"
         >
-          {loading ? "Adding..." : "Add Consultant"}
+          Update Consultant
         </button>
       </form>
     </div>
   );
-};
+}
 
-export default AddConsultant;
+export default EditConsultant;

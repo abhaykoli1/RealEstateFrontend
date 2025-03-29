@@ -16,14 +16,18 @@ import plane from "../../assets/planee.png";
 import WhatsApp from "../../assets/whatsapp.png";
 import download from "../../assets/download.png";
 import share from "../../assets/Share.png";
-import Calendar from "../../assets/Calendar.png";
+import Cal from "../../assets/Calendar.png";
 import { FcLock } from "react-icons/fc";
 import axios from "axios";
 import config from "../../common/config";
 import { useParams } from "react-router";
+import TimeSlotSelector from "../../components/user/timeSlots";
+import Calendar from "react-calendar";
+
 // import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import { X } from "lucide-react";
 
 const PropertyPerticular = () => {
   const places = [
@@ -156,6 +160,10 @@ const PropertyPerticular = () => {
     ],
   };
   const [properties, setProperties] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [value, setValue] = useState(new Date());
+
+  console.log("value =====", value);
 
   console.log("properties", properties);
 
@@ -714,11 +722,14 @@ const PropertyPerticular = () => {
                     <img src={download} />
                   </button>
 
-                  <button className="!p-2 !px-6 h-[49px] !bg-white shadow-md rounded-lg flex items-center gap-2">
+                  <button
+                    onClick={() => setIsOpen(true)}
+                    className="!p-2 !px-6 h-[49px] !bg-white shadow-md rounded-lg flex items-center gap-2"
+                  >
                     <span className="text-black font-medium">
                       Book a Viewing
                     </span>
-                    <img src={Calendar} />
+                    <img src={Cal} />
                   </button>
 
                   <button className="!p-2 !px-10 h-[49px] !bg-white shadow-md rounded-lg flex items-center justify-center">
@@ -729,7 +740,7 @@ const PropertyPerticular = () => {
                       href={`https://wa.me/${selectedConsultant?.country_code}${selectedConsultant?.phone}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="!p-2 !px-6 h-[49px] !bg-white shadow-md cursor-pointer hover:scale-[101%] !rounded-[5px] flex items-center gap-2"
+                      className="!p-2 !px-6 hover:outline-[#2f5fa7] outline outline-transparent h-[49px] !bg-white shadow-md cursor-pointer hover:scale-[101%] !rounded-[5px] flex items-center gap-2"
                     >
                       <span className="text-black font-medium">WhatsApp</span>
                       <img src={WhatsApp} alt="WhatsApp Icon" />
@@ -739,6 +750,44 @@ const PropertyPerticular = () => {
               </div>
             </div>
           </div>
+          {/* Modal */}
+          {isOpen && (
+            <div className="fixed inset-0  flex justify-center items-center ">
+              <div className="bg-white rounded-lg shadow-lg p-6 z-20 mt-20 relative">
+                <h2 className="text-lg font-semibold text-gray-800 mb-4">
+                  Select a Date & Time
+                </h2>
+
+                <div className="calendar-container flex items-center justify-center w-">
+                  <Calendar onChange={setValue} value={value} />
+                  <div className="w-96 h-[422px] overflow-hidden ">
+                    <h3 className="text-lg text-center font-semibold mb-2 text-gray-800">
+                      Select Time
+                    </h3>
+                    <div className="h-full overflow-y-auto p-2">
+                      <TimeSlotSelector />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex justify-end gap-2">
+                  <div
+                    className="absolute top-4 right-4 !bg-transparent cursor-pointer hover:scale-115 transition-all duration-300   !text-gray-700 rounded-md !hover:bg-gray-400"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <X />
+                  </div>
+                </div>
+              </div>
+              {isOpen ? (
+                <div
+                  onClick={() => setIsOpen(false)}
+                  className="bg-[rgba(0,0,0,0.3)] bg-opacity0   fixed top-0 right-0 left-0 bottom-0 z-10"
+                ></div>
+              ) : (
+                ""
+              )}
+            </div>
+          )}
         </div>
       ) : (
         ""

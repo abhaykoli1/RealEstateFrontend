@@ -20,100 +20,8 @@ import config from "../../common/config";
 import PropertySearch from "../../components/user/search";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import DateCompo from "../../components/user/date";
-
-const menuItems = [
-  { label: "Beds", icon: null, options: ["1 Bed", "2 Beds", "3 Beds"] },
-
-  {
-    label: "Location",
-    icon: <FaLocationArrow />,
-    options: ["New York", "Los Angeles", "Chicago"],
-  },
-  {
-    label: "Price Range",
-    icon: <FaDollarSign />,
-    options: ["1000 - 2000", "2000 - 3000", "3000 - 4000"],
-  },
-  { label: "Buy", icon: null, options: ["House", "Apartment", "Land"] },
-  { label: "Villa", icon: null, options: ["Luxury", "Budget", "Duplex"] },
-];
-
-const smallProperty = [
-  {
-    image: shortProperty,
-    date: "10 March",
-    title: "Top 5 Resources for Writing Excellent Academic Assignments",
-    description:
-      " of an individual's work. In the following lines, we'll look at some of the research tools available online that can make collecting details for an assignment much more straightforward for students, as well ",
-    link: "#",
-  },
-  {
-    image: shortProperty,
-    date: "10 March",
-    title: "Top 5 Resources for Writing Excellent Academic Assignments",
-    description:
-      " of an individual's work. In the following lines, we'll look at some of the research tools available online that can make collecting details for an assignment much more straightforward for students, as well ",
-    link: "#",
-  },
-  {
-    image: shortProperty,
-    date: "10 March",
-    title: "Top 5 Resources for Writing Excellent Academic Assignments",
-    description:
-      " of an individual's work. In the following lines, we'll look at some of the research tools available online that can make collecting details for an assignment much more straightforward for students, as well ",
-    link: "#",
-  },
-  {
-    image: shortProperty,
-    date: "10 March",
-    title: "Top 5 Resources for Writing Excellent Academic Assignments",
-    description:
-      " of an individual's work. In the following lines, we'll look at some of the research tools available online that can make collecting details for an assignment much more straightforward for students, as well ",
-    link: "#",
-  },
-  {
-    image: shortProperty,
-    date: "10 March",
-    title: "Top 5 Resources for Writing Excellent Academic Assignments",
-    description:
-      " of an individual's work. In the following lines, we'll look at some of the research tools available online that can make collecting details for an assignment much more straightforward for students, as well ",
-    link: "#",
-  },
-  {
-    image: shortProperty,
-    date: "10 March",
-    title: "Top 5 Resources for Writing Excellent Academic Assignments",
-    description:
-      " of an individual's work. In the following lines, we'll look at some of the research tools available online that can make collecting details for an assignment much more straightforward for students, as well ",
-    link: "#",
-  },
-];
 
 const ListingProperties = () => {
-  const [properties, setProperties] = useState([]);
-
-  console.log("Listing properties", properties);
-
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isNewestFirst, setIsNewestFirst] = useState(true);
-
-  // Filter properties based on search query
-  const filteredProperties = properties.filter((property) =>
-    property.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  // Sort filtered properties by createdAt (newest first or oldest first)
-  const sortedProperties = [...filteredProperties].sort((a, b) => {
-    const dateA = new Date(a.createdAt).getTime();
-    const dateB = new Date(b.createdAt).getTime();
-
-    return isNewestFirst ? dateB - dateA : dateA - dateB; // Toggle between newest/oldest
-  });
-
   const sliderRef = useRef(null);
   const settings = {
     // dots: true,
@@ -156,9 +64,51 @@ const ListingProperties = () => {
       },
     ],
   };
+
+  const [properties, setProperties] = useState([]);
+  const [updatedProperties, setUpdatedProperties] = useState([]);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isNewestFirst, setIsNewestFirst] = useState(true);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [activeTab, setActiveTab] = useState("map");
   const [showDropdown, setShowDropdown] = useState(false);
+
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        const response = await axios.get(`${config.API_URL}/api/property`);
+        console.log("API Response:", response.data); // 🔍 Debugging
+        const propertiesData = response.data.data;
+
+        if (!Array.isArray(propertiesData)) {
+          console.error("Expected an array, got:", propertiesData);
+          return;
+        }
+
+        setProperties(propertiesData);
+      } catch (error) {
+        console.error("Error fetching properties:", error);
+      }
+    };
+
+    fetchProperties();
+  }, []);
+
+  console.log("Listing properties", updatedProperties);
+  // Filter properties based on search query
+
+  const filteredProperties = properties.filter((property) =>
+    property.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Sort filtered properties by createdAt (newest first or oldest first)
+  const sortedProperties = [...filteredProperties].sort((a, b) => {
+    const dateA = new Date(a.createdAt).getTime();
+    const dateB = new Date(b.createdAt).getTime();
+
+    return isNewestFirst ? dateB - dateA : dateA - dateB;
+  });
 
   const toggleDropdown = (index) => {
     setOpenDropdown(openDropdown === index ? null : index);
@@ -166,19 +116,13 @@ const ListingProperties = () => {
 
   const [filterBar, setFilterBar] = useState(false);
 
-  const markers = [
-    { id: 1, position: [37.7749, -122.4194], label: "San Francisco" },
-    { id: 2, position: [34.0522, -118.2437], label: "Los Angeles" },
-    { id: 3, position: [40.7128, -74.006], label: "New York" },
-  ];
-
   const defaultCenter = [37.7749, -122.4194]; // Centered around San Francisco
 
   return (
     <section className=" h-full lg:pt-12 md:py-12 !-mt-3">
       <div className="2xl:container mx-auto lg:px-10 md:px-5 ">
         <div className="flex flex-wrap  lg:space-x-4 lg:space-y-4">
-          <div className="ListingHeader ">
+          <div className="ListingHeader">
             <div className="">
               <span className="!text-[12px] lg:hidden md:hidden flex items-center">
                 <LuListFilter
@@ -202,6 +146,8 @@ const ListingProperties = () => {
               <div className=" space-x-4 lg:flex md:flex   hidden ">
                 <div className=" gap-3 flex flex-wrap relative ">
                   <PropertySearch
+                    setUpdatedProperties={setUpdatedProperties}
+                    updatedProperties={updatedProperties}
                     setShowDropdown={setShowDropdown}
                     showDropdown={showDropdown}
                     setActiveTab={setActiveTab}
@@ -210,28 +156,6 @@ const ListingProperties = () => {
                     properties={properties}
                     map={true}
                   />
-                  {/* <div className="flex bg-white shadow-[0px_5px_10px_rgba(0,0,0,0.1)] lg:mx-5">
-                    <a
-                      className={`px-7 py-3 text-[16px]  flex items-center gap-3 transition-all cursor-pointer shadow-[0px_5px_10px_rgba(0,0,0,0.1)] rounded-l-md  ${
-                        activeTab === "map"
-                          ? "bg-[#204A7A] !text-white"
-                          : "bg-white text-black"
-                      }`}
-                      onClick={() => setActiveTab("map")}
-                    >
-                      Map
-                    </a>
-                    <a
-                      className={`px-7 py-3 text-[16px]  flex items-center gap-3 transition-all cursor-pointer rounded-r-md shadow-[0px_5px_10px_rgba(0,0,0,0.1)] ${
-                        activeTab === "list"
-                          ? "bg-[#204A7A] !text-white"
-                          : "bg-white text-black"
-                      }`}
-                      onClick={() => setActiveTab("list")}
-                    >
-                      List
-                    </a>
-                  </div> */}
                 </div>
               </div>
             </div>
@@ -352,8 +276,8 @@ const ListingProperties = () => {
             </div>
             <div className="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 lg:mt-4 md:mt-4 mt-0">
               {/* Display Sorted and Filtered Properties */}
-              {sortedProperties.length > 0 ? (
-                sortedProperties.map((pro) => (
+              {updatedProperties.length > 0 ? (
+                updatedProperties.map((pro) => (
                   <div key={pro.id}>
                     <PropertyCard {...pro} />
                   </div>

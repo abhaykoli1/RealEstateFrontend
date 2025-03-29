@@ -74,13 +74,14 @@ const OffPlanProperty = () => {
 
           <div className="mt-10  relative mx-10">
             <Slider ref={sliderRef} {...settings}>
-              {properties
-                .filter((pro) => pro.off_plan === true)
-                .map((pro, index) => (
-                  <div key={index} className="slick-slide">
-                    <PropertyCardCompo pro={pro} />
-                  </div>
-                ))}
+              {properties.length < 0 &&
+                properties
+                  .filter((pro) => pro.off_plan === true)
+                  .map((pro, index) => (
+                    <div key={index} className="slick-slide">
+                      <PropertyCardCompo pro={pro} />
+                    </div>
+                  ))}
             </Slider>
           </div>
         </div>
